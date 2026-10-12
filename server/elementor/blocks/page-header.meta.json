@@ -1,0 +1,12 @@
+{
+  "id": "page-header",
+  "name": "Page header",
+  "description": "Compact title band for interior pages.",
+  "params": [
+    { "key": "heading", "label": "Page title", "type": "text", "default": "Page title" },
+    { "key": "subheading", "label": "Subtitle", "type": "textarea", "default": "A short line introducing this page." },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#F1F5F9", "brand": "surface" },
+    { "key": "headingColor", "label": "Title colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Subtitle colour", "type": "color", "default": "#4B5563" }
+  ]
+}

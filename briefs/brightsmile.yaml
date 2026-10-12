@@ -1,0 +1,81 @@
+site:
+  name: Bright Smile Dental
+  slug: brightsmile
+  tagline: Gentle dentistry in Pune
+  adminUser: admin
+  adminEmail: riteshlahabar@gmail.com
+  adminPassword: BuilderTest123!
+brand:
+  colors:
+    primary: "#0F766E"
+    secondary: "#134E4A"
+    text: "#1F2937"
+    accent: "#F59E0B"
+  fonts:
+    heading: Poppins
+    body: Inter
+theme: hello-elementor
+plugins:
+  free:
+    - elementor
+  premium: []
+pages:
+  - title: Home
+    slug: home
+    isFrontPage: true
+    sections:
+      - block: hero-centered
+        content:
+          heading: Gentle dentistry, honest advice
+          subheading: A calm clinic in Pune for people who would rather be anywhere else.
+          buttonText: Book an appointment
+          buttonUrl: /brightsmile/contact/
+      - block: features-3col
+        content:
+          heading: What we do
+          feature1Title: Preventive care
+          feature1Text: Check-ups and cleaning that keep problems small.
+          feature2Title: Cosmetic work
+          feature2Text: Whitening, veneers and alignment done conservatively.
+          feature3Title: Emergency help
+          feature3Text: Same-day appointments when something goes wrong.
+      - block: cta-banner
+        content:
+          heading: Still putting it off?
+          subheading: Most first visits take twenty minutes and involve no drilling at all.
+          buttonText: Book a first visit
+          buttonUrl: /brightsmile/contact/
+  - title: Services
+    slug: services
+    isFrontPage: false
+    sections:
+      - block: page-header
+        content:
+          heading: Services
+          subheading: What we treat, and what it costs.
+      - block: features-3col
+        content:
+          heading: Treatments
+          feature1Title: Scaling
+          feature1Text: Removes plaque the brush cannot reach.
+          feature2Title: Fillings
+          feature2Text: Tooth-coloured composite, matched to your enamel.
+          feature3Title: Root canal
+          feature3Text: Done under local anaesthetic in one or two sittings.
+  - title: Contact
+    slug: contact
+    isFrontPage: false
+    sections:
+      - block: page-header
+        content:
+          heading: Contact
+          subheading: Find us, or send a message.
+      - block: cta-banner
+        content:
+          heading: Call the clinic
+          subheading: Open Monday to Saturday, 9am to 7pm.
+          buttonText: Call now
+          buttonUrl: tel:+910000000000
+menu:
+  name: Primary
+  location: menu-1

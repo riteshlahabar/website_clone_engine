@@ -10,6 +10,8 @@ import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import open from "open";
 import { PATHS, SERVER_PORT } from "./lib/env.ts";
+import { registerBlockRoutes } from "./routes/blocks.ts";
+import { registerBuildRoutes } from "./routes/build.ts";
 import { registerDoctorRoutes } from "./routes/doctor.ts";
 import { registerJobRoutes } from "./routes/jobs.ts";
 
@@ -24,6 +26,8 @@ await mkdir(PATHS.briefs, { recursive: true });
 
 registerDoctorRoutes(app);
 registerJobRoutes(app);
+registerBuildRoutes(app);
+registerBlockRoutes(app);
 
 app.get("/api/health", async () => ({ ok: true, port: SERVER_PORT }));
 

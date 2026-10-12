@@ -90,6 +90,11 @@ export async function wp(
   }
 
   const fullArgs = [
+    // Extracting the WordPress tarball blows past PHP's default 128M limit and
+    // dies with "Allowed memory size exhausted" mid-download. WP-CLI is a
+    // short-lived CLI process, so an unbounded limit is the standard fix.
+    "-d",
+    "memory_limit=-1",
     PATHS.wpCliPhar,
     ...args,
     ...(options.sitePath ? [`--path=${options.sitePath}`] : []),

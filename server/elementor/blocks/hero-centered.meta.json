@@ -1,0 +1,15 @@
+{
+  "id": "hero-centered",
+  "name": "Centred hero",
+  "description": "Full-width opening band with a headline, supporting line and a call-to-action button.",
+  "params": [
+    { "key": "heading", "label": "Headline", "type": "text", "default": "A headline that says what you do" },
+    { "key": "subheading", "label": "Supporting line", "type": "textarea", "default": "One sentence explaining the offer and who it is for." },
+    { "key": "buttonText", "label": "Button text", "type": "text", "default": "Get in touch" },
+    { "key": "buttonUrl", "label": "Button link", "type": "text", "default": "#contact" },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#F8FAFC", "brand": "surface" },
+    { "key": "headingColor", "label": "Headline colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Text colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Button colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}

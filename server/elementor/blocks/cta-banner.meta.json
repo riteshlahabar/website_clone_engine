@@ -1,0 +1,13 @@
+{
+  "id": "cta-banner",
+  "name": "Call-to-action banner",
+  "description": "High-contrast band with a closing message and a button.",
+  "params": [
+    { "key": "heading", "label": "Headline", "type": "text", "default": "Ready to get started?" },
+    { "key": "subheading", "label": "Supporting line", "type": "textarea", "default": "Tell us what you need and we will take it from there." },
+    { "key": "buttonText", "label": "Button text", "type": "text", "default": "Book an appointment" },
+    { "key": "buttonUrl", "label": "Button link", "type": "text", "default": "#contact" },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#134E4A", "brand": "secondary" },
+    { "key": "accentColor", "label": "Button colour", "type": "color", "default": "#F59E0B", "brand": "accent" }
+  ]
+}

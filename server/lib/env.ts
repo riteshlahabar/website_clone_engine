@@ -14,9 +14,24 @@ export const PROJECT_ROOT = path.resolve(
   "..",
 );
 
+/**
+ * WP-CLI re-invokes itself for some commands and builds that self-call without
+ * quoting the phar path, so a space anywhere in it breaks with
+ * "Could not open input file: C:\All". Keep the phar out of a spaced path.
+ */
+const TOOLS_DIR = (() => {
+  const inProject = path.join(PROJECT_ROOT, "tools");
+  if (!inProject.includes(" ")) return inProject;
+  const localAppData = process.env.LOCALAPPDATA;
+  if (localAppData && !localAppData.includes(" ")) {
+    return path.join(localAppData, "wp-site-builder");
+  }
+  return "C:\\wp-site-builder-tools";
+})();
+
 export const PATHS = {
-  tools: path.join(PROJECT_ROOT, "tools"),
-  wpCliPhar: path.join(PROJECT_ROOT, "tools", "wp-cli.phar"),
+  tools: TOOLS_DIR,
+  wpCliPhar: path.join(TOOLS_DIR, "wp-cli.phar"),
   php: path.join(PROJECT_ROOT, "php"),
   out: path.join(PROJECT_ROOT, "out"),
   jobs: path.join(PROJECT_ROOT, "out", "jobs"),

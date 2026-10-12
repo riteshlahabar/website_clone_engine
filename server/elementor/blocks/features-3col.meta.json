@@ -1,0 +1,19 @@
+{
+  "id": "features-3col",
+  "name": "Three feature cards",
+  "description": "A section heading above three equal cards, each with an icon, title and short description.",
+  "params": [
+    { "key": "heading", "label": "Section heading", "type": "text", "default": "What we do" },
+    { "key": "feature1Title", "label": "Card 1 title", "type": "text", "default": "First service" },
+    { "key": "feature1Text", "label": "Card 1 text", "type": "textarea", "default": "A sentence or two describing this service." },
+    { "key": "feature2Title", "label": "Card 2 title", "type": "text", "default": "Second service" },
+    { "key": "feature2Text", "label": "Card 2 text", "type": "textarea", "default": "A sentence or two describing this service." },
+    { "key": "feature3Title", "label": "Card 3 title", "type": "text", "default": "Third service" },
+    { "key": "feature3Text", "label": "Card 3 text", "type": "textarea", "default": "A sentence or two describing this service." },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#FFFFFF" },
+    { "key": "cardColor", "label": "Card background", "type": "color", "default": "#F8FAFC", "brand": "surface" },
+    { "key": "headingColor", "label": "Heading colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Body colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Icon colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}
