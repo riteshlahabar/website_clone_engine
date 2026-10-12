@@ -4,6 +4,13 @@ A browser-driven tool that builds WordPress sites with Elementor pages, a theme,
 from a structured brief. Target environment is local XAMPP. **There is no terminal UI** — the
 user double-clicks `start.bat`, a Fastify server boots, and the browser opens.
 
+## Sibling project
+
+`../Mediator` publishes Elementor pages to an **existing, live** WordPress site over the
+REST API, instead of provisioning a new one locally. It reuses this project's block library and
+compose engine unchanged — if you add or change a block here, consider porting it there.
+Runs on port 5180; this one uses 5174.
+
 ## Pipeline
 
 ```
