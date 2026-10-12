@@ -6,6 +6,7 @@
  */
 import { existsSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
+import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import open from "open";
@@ -14,20 +15,25 @@ import { registerBlockRoutes } from "./routes/blocks.ts";
 import { registerBuildRoutes } from "./routes/build.ts";
 import { registerDoctorRoutes } from "./routes/doctor.ts";
 import { registerJobRoutes } from "./routes/jobs.ts";
+import { registerPluginRoutes } from "./routes/plugins.ts";
 
 const app = Fastify({
   logger: { level: process.env.LOG_LEVEL ?? "warn" },
   bodyLimit: 25 * 1024 * 1024, // premium plugin zips are uploaded through here
 });
 
+await app.register(fastifyMultipart, { limits: { fileSize: 64 * 1024 * 1024 } });
+
 await mkdir(PATHS.jobs, { recursive: true });
 await mkdir(PATHS.screenshots, { recursive: true });
 await mkdir(PATHS.briefs, { recursive: true });
+await mkdir(PATHS.vendorPlugins, { recursive: true });
 
 registerDoctorRoutes(app);
 registerJobRoutes(app);
 registerBuildRoutes(app);
 registerBlockRoutes(app);
+registerPluginRoutes(app);
 
 app.get("/api/health", async () => ({ ok: true, port: SERVER_PORT }));
 

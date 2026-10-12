@@ -1,0 +1,56 @@
+site:
+  name: Northgate Legal
+  slug: northgate
+  tagline: Plain-English law
+  adminUser: admin
+  adminEmail: riteshlahabar@gmail.com
+  adminPassword: BuilderTest123!
+  logoUrl: https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=300&q=80
+brand:
+  colors:
+    primary: "#7C3AED"
+    secondary: "#2E1065"
+    text: "#111827"
+    accent: "#DB2777"
+  fonts:
+    heading: Playfair Display
+    body: Source Sans 3
+theme: hello-elementor
+plugins:
+  free:
+    - elementor
+  premium: []
+pages:
+  - title: Home
+    slug: home
+    isFrontPage: true
+    sections:
+      - block: hero-centered
+        content:
+          heading: Law without the jargon
+          subheading: We explain your options in words you can act on.
+      - block: stats-row
+        content: {}
+      - block: text-image-split
+        content:
+          heading: How we work
+      - block: testimonials-3col
+        content: {}
+      - block: pricing-3col
+        content: {}
+      - block: faq-accordion
+        content: {}
+      - block: cta-banner
+        content: {}
+  - title: Contact
+    slug: contact
+    isFrontPage: false
+    sections:
+      - block: page-header
+        content:
+          heading: Contact
+      - block: contact-split
+        content: {}
+menu:
+  name: Primary
+  location: menu-1

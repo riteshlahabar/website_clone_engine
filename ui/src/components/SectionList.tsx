@@ -41,7 +41,11 @@ function ContentFields({
         return (
           <label
             key={param.key}
-            className={param.type === "textarea" ? "sm:col-span-2" : undefined}
+            className={
+              param.type === "textarea" || param.type === "image"
+                ? "sm:col-span-2"
+                : undefined
+            }
           >
             <span className="mb-1 block text-xs font-medium text-slate-600">
               {param.label}
@@ -54,6 +58,26 @@ function ContentFields({
                 placeholder={param.default}
                 onChange={(event) => set(param.key, event.target.value)}
               />
+            ) : param.type === "image" ? (
+              <span className="block">
+                <input
+                  className={common}
+                  value={value}
+                  placeholder={param.default}
+                  onChange={(event) => set(param.key, event.target.value)}
+                />
+                {/* A thumbnail catches a wrong or dead URL before the build. */}
+                {(value || param.default) ? (
+                  <img
+                    src={value || param.default}
+                    alt=""
+                    className="mt-2 h-20 w-full rounded border border-slate-200 object-cover"
+                    onError={(event) => {
+                      event.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : null}
+              </span>
             ) : param.type === "color" ? (
               <span className="flex items-center gap-2">
                 <input

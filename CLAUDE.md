@@ -10,8 +10,10 @@ user double-clicks `start.bat`, a Fastify server boots, and the browser opens.
 Brief (UI form → briefs/<slug>.yaml)
   ├─ validate    zod schema (server/shared/brief.ts)
   ├─ provision   WP core + database + theme + plugins + permalinks
+  ├─ media       import images and the logo into the media library
   ├─ compose     block templates + content → Elementor JSON per page
-  └─ apply       pages, _elementor_data, front page, menu, flush-css
+  ├─ apply       pages, _elementor_data, kit colours/fonts, front page, menu
+  └─ verify      HTTP 200, PHP-notice scan, widget count per page
 ```
 
 Long operations run as background **jobs**; the browser follows them over **SSE**
@@ -116,6 +118,22 @@ vendor-plugins/         premium .zip uploads (gitignored)
    Set `brand` on colour params that should follow the palette.
 4. `npm test` — the suite composes every block and fails on malformed output.
 
+## Elementor free vs Pro
+
+Elementor registers **upgrade stubs** for Pro widgets even when Pro is absent, so
+`widgets_manager->get_widget_types()` listing a widget does **not** mean it is usable.
+A block referencing one renders an "Upgrade Now" prompt instead of content.
+
+Confirmed Pro-only (never use in a block): `price-table`, `form`, `slides`, `flip-box`,
+`call-to-action`, `nav-menu`, `posts`, `portfolio`, `testimonial-carousel`,
+`animated-headline`, `countdown`, `share-buttons`, `lottie`. A test enforces this list.
+
+Confirmed free and in use: `heading`, `text-editor`, `button`, `icon-box`, `image`,
+`icon-list`, `testimonial`, `accordion`, `counter`, `google_maps`.
+
+To re-check on another install, inspect the class behind each widget — a stub is
+`Elementor\Modules\Promotions\Widgets\Pro_Widget_Promotion`.
+
 ## Known constraints
 
 - **Elementor Pro and premium themes cannot be downloaded.** They are not on wordpress.org, so
@@ -130,6 +148,41 @@ vendor-plugins/         premium .zip uploads (gitignored)
 
 Newest first. One entry per working session: what changed, why, and what broke.
 When this passes ~150 lines, move older entries to `docs/HISTORY.md` and keep the last ~10 here.
+
+## 2026-10-12 — Phase 4: blocks, global kit, images, premium upload, verify
+
+Closed every gap identified in the completeness audit.
+
+- **Block library 4 → 10.** Added `testimonials-3col`, `pricing-3col`, `contact-split`,
+  `faq-accordion`, `text-image-split`, `stats-row`.
+- **Global kit applied** (`php/set-elementor-kit.php`, `elementor/kit.ts`): brand colours
+  become Elementor global colours and the chosen fonts become global typography plus
+  Theme Style body/h1–h6. Fonts previously had no effect at all. Verified live: the kit
+  CSS carries `--e-global-color-*` and Google Fonts are enqueued for the chosen families.
+- **Images** (`lib/media.ts`): image params are imported into the media library before
+  compose, with the attachment id written alongside the URL so WordPress emits `srcset`.
+  Logo support added, with custom CSS capping its height.
+- **Premium plugin upload** (`routes/plugins.ts` + `PremiumPlugins.tsx`): upload, list,
+  tick and delete `.zip` files; the form now actually sends them.
+- **Verify phase** (`lib/verify.ts`): every page is fetched after the build and checked
+  for HTTP 200, PHP notices leaking into markup, and a non-zero widget count. Results
+  appear as a badge per page in the result panel.
+- **Default content removed** — Sample Page, Privacy Policy and Hello world! are deleted.
+- Tests 11 → 15.
+
+**Four problems found by actually running it:**
+1. `price-table` is a **Pro stub**, so the originally planned pricing block would have
+   rendered an upgrade prompt. Rebuilt from free widgets, and a test now enforces the
+   Pro-widget blocklist.
+2. `wp media import <url>` fails for any URL without a file extension (Unsplash, most
+   CDNs) — WordPress infers type from the filename, so a valid JPEG is rejected as
+   "not allowed to upload this file type". Now downloaded first and named from the
+   `Content-Type` header.
+3. **Bug caught by a new test:** `instantiate` stripped *every* `id` key to regenerate
+   element ids, which also wiped the attachment id inside image settings. It now only
+   regenerates ids on nodes that declare `elType`.
+4. Rebuilds duplicated media (`hero.jpg`, `hero-2.jpg`, …). Existing attachments are
+   now reused; verified the attachment count is unchanged across a rebuild.
 
 ## 2026-10-12 — Phases 1–3: provisioning, Elementor engine, browser form
 

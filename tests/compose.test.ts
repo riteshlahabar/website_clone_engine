@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { composePage, validateDocument } from "../server/elementor/compose.ts";
-import { listBlocks } from "../server/elementor/registry.ts";
+import { getBlock, listBlocks } from "../server/elementor/registry.ts";
 import { briefSchema, type Brief, type Page } from "../server/shared/brief.ts";
 
 const BRAND = {
@@ -140,5 +140,73 @@ describe("brief schema", () => {
       pages: [],
     });
     expect(result.success).toBe(false);
+  });
+});
+
+describe("image parameters", () => {
+  it("always defines the companion _id token so nothing is left unsubstituted", async () => {
+    // text-image-split references {{imageUrl}} and {{imageUrl_id}} as a pair.
+    // When no import happened the id must resolve to "" rather than survive.
+    const brief = briefWith([{ block: "text-image-split", content: {} }]);
+    const elements = await composePage(brief.pages[0]!, brief);
+
+    expect(validateDocument(elements)).toEqual([]);
+    expect(JSON.stringify(elements)).not.toContain("imageUrl_id");
+  });
+
+  it("uses the attachment id the apply phase injected", async () => {
+    const brief = briefWith([
+      {
+        block: "text-image-split",
+        content: {
+          imageUrl: "http://localhost/site/wp-content/uploads/hero.jpg",
+          imageUrl_id: "42",
+        },
+      },
+    ]);
+    const elements = await composePage(brief.pages[0]!, brief);
+    const json = JSON.stringify(elements);
+
+    expect(json).toContain('"id":"42"');
+    expect(json).toContain("uploads/hero.jpg");
+  });
+});
+
+describe("block library coverage", () => {
+  it("declares a param for every token appearing in a template", async () => {
+    const blocks = await listBlocks();
+    for (const meta of blocks) {
+      const block = await getBlock(meta.id);
+      const tokens = new Set(
+        [...JSON.stringify(block.template).matchAll(/\{\{(\w+)\}\}/g)].map((m) => m[1]!),
+      );
+      const declared = new Set(meta.params.map((param) => param.key));
+      // `<key>_id` companions are derived from an image param, not declared.
+      const undeclared = [...tokens].filter(
+        (token) =>
+          !declared.has(token) &&
+          !(token.endsWith("_id") && declared.has(token.slice(0, -3))),
+      );
+      expect(undeclared, `block ${meta.id} has undeclared tokens`).toEqual([]);
+    }
+  });
+
+  it("uses only Elementor free widgets", async () => {
+    // These are Pro-only; Elementor registers upgrade stubs for them, so a
+    // block referencing one renders an "Upgrade" prompt instead of content.
+    const proOnly = [
+      "price-table", "form", "slides", "flip-box", "call-to-action",
+      "nav-menu", "posts", "portfolio", "testimonial-carousel",
+      "animated-headline", "countdown", "share-buttons", "lottie",
+    ];
+    const blocks = await listBlocks();
+    for (const meta of blocks) {
+      const block = await getBlock(meta.id);
+      const used = [
+        ...JSON.stringify(block.template).matchAll(/"widgetType":"([^"]+)"/g),
+      ].map((match) => match[1]!);
+      const offenders = used.filter((widget) => proOnly.includes(widget));
+      expect(offenders, `block ${meta.id} uses Pro widgets`).toEqual([]);
+    }
   });
 });

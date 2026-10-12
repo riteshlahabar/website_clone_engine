@@ -1,0 +1,102 @@
+{
+  "elType": "container",
+  "settings": {
+    "content_width": "boxed",
+    "flex_direction": "row",
+    "flex_gap": { "unit": "px", "size": 40, "column": "40", "row": "40" },
+    "flex_wrap": "wrap",
+    "flex_align_items": "center",
+    "padding": { "unit": "px", "top": "80", "right": "20", "bottom": "80", "left": "20", "isLinked": false },
+    "background_background": "classic",
+    "background_color": "{{bgColor}}"
+  },
+  "elements": [
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 45, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "heading",
+          "settings": {
+            "title": "{{heading}}",
+            "header_size": "h2",
+            "title_color": "{{headingColor}}",
+            "typography_typography": "custom",
+            "typography_font_size": { "unit": "px", "size": 32, "sizes": [] },
+            "typography_font_weight": "700"
+          },
+          "elements": []
+        },
+        {
+          "elType": "widget",
+          "widgetType": "text-editor",
+          "settings": {
+            "editor": "<p>{{intro}}</p>",
+            "text_color": "{{textColor}}",
+            "_margin": { "unit": "px", "top": "10", "right": "0", "bottom": "20", "left": "0", "isLinked": false }
+          },
+          "elements": []
+        },
+        {
+          "elType": "widget",
+          "widgetType": "icon-list",
+          "settings": {
+            "icon_list": [
+              {
+                "text": "{{address}}",
+                "selected_icon": { "value": "fas fa-map-marker-alt", "library": "fa-solid" },
+                "_id": "cs01add"
+              },
+              {
+                "text": "{{phone}}",
+                "selected_icon": { "value": "fas fa-phone", "library": "fa-solid" },
+                "_id": "cs02tel"
+              },
+              {
+                "text": "{{email}}",
+                "selected_icon": { "value": "fas fa-envelope", "library": "fa-solid" },
+                "_id": "cs03eml"
+              },
+              {
+                "text": "{{hours}}",
+                "selected_icon": { "value": "fas fa-clock", "library": "fa-solid" },
+                "_id": "cs04hrs"
+              }
+            ],
+            "space_between": { "unit": "px", "size": 12, "sizes": [] },
+            "icon_color": "{{accentColor}}",
+            "text_color": "{{textColor}}"
+          },
+          "elements": []
+        }
+      ]
+    },
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 50, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "google_maps",
+          "settings": {
+            "address": "{{mapAddress}}",
+            "zoom": { "unit": "px", "size": 14, "sizes": [] },
+            "height": { "unit": "px", "size": 340, "sizes": [] }
+          },
+          "elements": []
+        }
+      ]
+    }
+  ]
+}

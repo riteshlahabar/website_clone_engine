@@ -56,32 +56,58 @@ function ResultPanel({ result }: { result: BuildResult }) {
 
       <h4 className="mt-4 text-sm font-medium">Pages</h4>
       <ul className="mt-1 space-y-1">
-        {result.pages.map((page) => (
-          <li key={page.postId} className="flex flex-wrap items-center gap-2 text-sm">
-            <a
-              href={page.url}
-              target="_blank"
-              rel="noreferrer"
-              className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-900"
-            >
-              {page.title}
-            </a>
-            {page.isFrontPage ? (
-              <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[11px] text-emerald-800">
-                front page
-              </span>
-            ) : null}
-            <a
-              href={page.editUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs text-indigo-700 hover:underline"
-            >
-              edit in Elementor →
-            </a>
-          </li>
-        ))}
+        {result.pages.map((page) => {
+          const check = result.verification?.checks.find(
+            (item) => item.url === page.url,
+          );
+          return (
+            <li key={page.postId} className="flex flex-wrap items-center gap-2 text-sm">
+              <a
+                href={page.url}
+                target="_blank"
+                rel="noreferrer"
+                className="font-medium text-slate-900 underline decoration-slate-300 hover:decoration-slate-900"
+              >
+                {page.title}
+              </a>
+              {page.isFrontPage ? (
+                <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[11px] text-emerald-800">
+                  front page
+                </span>
+              ) : null}
+              {check ? (
+                <span
+                  title={check.note ?? check.phpNotices[0] ?? ""}
+                  className={`rounded px-1.5 py-0.5 text-[11px] ${
+                    check.ok
+                      ? "bg-slate-100 text-slate-700"
+                      : "bg-amber-100 text-amber-900"
+                  }`}
+                >
+                  {check.ok
+                    ? `✓ ${check.widgetCount} widgets`
+                    : (check.note ?? `HTTP ${check.status}`)}
+                </span>
+              ) : null}
+              <a
+                href={page.editUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs text-indigo-700 hover:underline"
+              >
+                edit in Elementor →
+              </a>
+            </li>
+          );
+        })}
       </ul>
+
+      {result.verification && !result.verification.ok ? (
+        <p className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-amber-200">
+          The site was built, but some pages did not verify cleanly. Check the flagged
+          pages above — the full log is in the panel.
+        </p>
+      ) : null}
     </div>
   );
 }

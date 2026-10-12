@@ -1,0 +1,18 @@
+{
+  "id": "contact-split",
+  "name": "Contact details and map",
+  "description": "Address, phone, email and opening hours beside an embedded map.",
+  "params": [
+    { "key": "heading", "label": "Heading", "type": "text", "default": "Come and see us" },
+    { "key": "intro", "label": "Intro text", "type": "textarea", "default": "We are easy to reach, and there is parking at the door." },
+    { "key": "address", "label": "Address", "type": "text", "default": "123 MG Road, Pune 411001" },
+    { "key": "phone", "label": "Phone", "type": "text", "default": "+91 90000 00000" },
+    { "key": "email", "label": "Email", "type": "text", "default": "hello@example.com" },
+    { "key": "hours", "label": "Opening hours", "type": "text", "default": "Mon to Sat, 9am to 7pm" },
+    { "key": "mapAddress", "label": "Map location", "type": "text", "default": "MG Road, Pune" },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#FFFFFF" },
+    { "key": "headingColor", "label": "Heading colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Text colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Icon colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}

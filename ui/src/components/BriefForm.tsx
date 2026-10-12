@@ -1,5 +1,6 @@
 import type { BlockMeta, BriefDraft, PageDraft } from "../types.ts";
 import { slugify, uid } from "../types.ts";
+import PremiumPlugins from "./PremiumPlugins.tsx";
 import SectionList from "./SectionList.tsx";
 
 const FIELD =
@@ -213,6 +214,18 @@ export default function BriefForm({
             />
           </Field>
           <Field
+            label="Logo image URL"
+            hint="Optional. Imported into the media library and set as the site logo."
+            className="sm:col-span-2"
+          >
+            <input
+              className={FIELD}
+              value={draft.site.logoUrl}
+              placeholder="https://example.com/logo.png"
+              onChange={(event) => setSite({ logoUrl: event.target.value })}
+            />
+          </Field>
+          <Field
             label="Admin password"
             hint="Leave empty and one is generated for you, shown when the build finishes."
             className="sm:col-span-2"
@@ -277,6 +290,7 @@ export default function BriefForm({
                 onChange({
                   ...draft,
                   plugins: {
+                    ...draft.plugins,
                     free: event.target.value
                       .split(",")
                       .map((slug) => slug.trim())
@@ -287,11 +301,13 @@ export default function BriefForm({
             />
           </Field>
         </div>
-        <p className="mt-3 rounded-md bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-amber-200">
-          Elementor Pro and other paid plugins are not on wordpress.org and cannot be
-          downloaded automatically. Drop the <code>.zip</code> into the project's{" "}
-          <code>vendor-plugins</code> folder to install it.
-        </p>
+        <PremiumPlugins
+          selected={draft.plugins.premium}
+          disabled={disabled}
+          onChange={(premium) =>
+            onChange({ ...draft, plugins: { ...draft.plugins, premium } })
+          }
+        />
       </section>
 
       <section className="rounded-xl bg-panel p-4 shadow-sm ring-1 ring-slate-200">

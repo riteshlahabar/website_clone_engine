@@ -27,6 +27,8 @@ export const siteSchema = z.object({
   adminEmail: z.email("Enter a valid email address."),
   /** Generated when absent so a build never blocks on a password prompt. */
   adminPassword: z.string().min(6).optional(),
+  /** Imported into the media library and set as the theme logo. */
+  logoUrl: z.string().default(""),
 });
 
 export const brandSchema = z.object({

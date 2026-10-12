@@ -10,6 +10,9 @@ import { PATHS, PROJECT_ROOT } from "./env.ts";
 import type { JobLogger } from "./jobs.ts";
 import { wp } from "./wpcli.ts";
 import { composePage, validateDocument } from "../elementor/compose.ts";
+import { applyBrandKit } from "../elementor/kit.ts";
+import { getBlock } from "../elementor/registry.ts";
+import { applyLogo, importImage } from "./media.ts";
 import { resolveFrontPage, type Brief, type Page } from "../shared/brief.ts";
 
 const SET_DATA_SCRIPT = path.join(PROJECT_ROOT, "php", "set-elementor-data.php");
@@ -87,6 +90,35 @@ async function upsertPage(
   return id;
 }
 
+/**
+ * Import every image a page references, rewriting the section content in place
+ * so compose emits a local URL and its attachment id. Runs before compose
+ * because the composer is pure and cannot await a download.
+ */
+async function resolveSectionImages(
+  page: Page,
+  sitePath: string,
+  logger: JobLogger,
+): Promise<void> {
+  for (const section of page.sections) {
+    const block = await getBlock(section.block);
+    for (const param of block.params) {
+      if (param.type !== "image") continue;
+
+      const supplied = section.content[param.key];
+      const url =
+        typeof supplied === "string" && supplied.trim() !== ""
+          ? supplied
+          : param.default;
+      if (!url) continue;
+
+      const imported = await importImage(url, sitePath, logger);
+      section.content[param.key] = imported.url;
+      section.content[`${param.key}_id`] = imported.id;
+    }
+  }
+}
+
 export async function applyContent(
   brief: Brief,
   sitePath: string,
@@ -105,6 +137,7 @@ export async function applyContent(
     if (page.sections.length === 0) {
       logger.warn(`“${page.title}” has no sections — created as an empty page.`);
     } else {
+      await resolveSectionImages(page, sitePath, logger);
       const elements = await composePage(page, brief);
 
       // Catch a malformed document here; a bad one renders as a blank page
@@ -149,6 +182,9 @@ export async function applyContent(
     });
   }
 
+  await applyLogo(brief.site.logoUrl, sitePath, logger);
+  await applyBrandKit(brief, sitePath, logger);
+  await removeDefaultContent(sitePath, logger);
   await applyMenu(brief, applied, sitePath, logger);
 
   // Elementor serves cached per-post CSS; without this the new layout renders
@@ -160,6 +196,42 @@ export async function applyContent(
   });
 
   return applied;
+}
+
+/**
+ * WordPress ships a "Sample Page", a "Privacy Policy" draft and a "Hello world!"
+ * post. Leaving them behind is the clearest sign of an unfinished site, and they
+ * turn up in menus and search results.
+ */
+async function removeDefaultContent(
+  sitePath: string,
+  logger: JobLogger,
+): Promise<void> {
+  const defaults: Array<{ type: string; slug: string }> = [
+    { type: "page", slug: "sample-page" },
+    { type: "page", slug: "privacy-policy" },
+    { type: "post", slug: "hello-world" },
+  ];
+
+  const removed: string[] = [];
+  for (const { type, slug } of defaults) {
+    const found = await wp(
+      ["post", "list", `--post_type=${type}`, `--name=${slug}`, "--post_status=any", "--field=ID", "--format=ids"],
+      { sitePath, throwOnError: false },
+    );
+    const id = Number(found.stdout.trim().split(/\s+/)[0]);
+    if (!Number.isInteger(id) || id <= 0) continue;
+
+    const deleted = await wp(["post", "delete", String(id), "--force"], {
+      sitePath,
+      throwOnError: false,
+    });
+    if (deleted.exitCode === 0) removed.push(slug);
+  }
+
+  if (removed.length > 0) {
+    logger.log(`Removed WordPress default content: ${removed.join(", ")}.`);
+  }
 }
 
 async function applyMenu(

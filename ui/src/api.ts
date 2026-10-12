@@ -110,3 +110,32 @@ export async function startBuild(payload: unknown): Promise<StartBuildResponse> 
 }
 
 export type { BuildResult };
+
+// --- premium plugin zips ------------------------------------------------
+
+export type PremiumFile = { name: string; size: number; uploadedAt?: string };
+
+export async function fetchPremiumZips(): Promise<PremiumFile[]> {
+  const data = await request<{ files: PremiumFile[] }>("/api/plugins/premium");
+  return data.files;
+}
+
+export async function uploadPremiumZip(file: File): Promise<PremiumFile> {
+  const body = new FormData();
+  body.append("file", file);
+  // No Content-Type header: the browser must set the multipart boundary.
+  const response = await fetch("/api/plugins/premium", { method: "POST", body });
+  const parsed = (await response.json().catch(() => null)) as
+    | { ok?: boolean; file?: PremiumFile; message?: string }
+    | null;
+  if (!response.ok || !parsed?.file) {
+    throw new Error(parsed?.message ?? `Upload failed (${response.status})`);
+  }
+  return parsed.file;
+}
+
+export async function deletePremiumZip(name: string): Promise<void> {
+  await request(`/api/plugins/premium/${encodeURIComponent(name)}`, {
+    method: "DELETE",
+  });
+}

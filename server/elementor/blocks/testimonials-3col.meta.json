@@ -1,0 +1,22 @@
+{
+  "id": "testimonials-3col",
+  "name": "Three testimonials",
+  "description": "Three customer quotes side by side, each with a name and role.",
+  "params": [
+    { "key": "heading", "label": "Section heading", "type": "text", "default": "What people say" },
+    { "key": "quote1", "label": "Quote 1", "type": "textarea", "default": "They made the whole thing painless and explained every step." },
+    { "key": "name1", "label": "Name 1", "type": "text", "default": "A. Sharma" },
+    { "key": "role1", "label": "Role 1", "type": "text", "default": "Customer" },
+    { "key": "quote2", "label": "Quote 2", "type": "textarea", "default": "Booked on a Tuesday, sorted by Thursday. No fuss." },
+    { "key": "name2", "label": "Name 2", "type": "text", "default": "R. Patel" },
+    { "key": "role2", "label": "Role 2", "type": "text", "default": "Customer" },
+    { "key": "quote3", "label": "Quote 3", "type": "textarea", "default": "Honest pricing and they never pushed anything extra." },
+    { "key": "name3", "label": "Name 3", "type": "text", "default": "M. Desai" },
+    { "key": "role3", "label": "Role 3", "type": "text", "default": "Customer" },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#FFFFFF" },
+    { "key": "cardColor", "label": "Card background", "type": "color", "default": "#F8FAFC" },
+    { "key": "headingColor", "label": "Heading colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Quote colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Role colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}

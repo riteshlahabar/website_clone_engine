@@ -3,7 +3,7 @@
 export type BlockParam = {
   key: string;
   label: string;
-  type: "text" | "textarea" | "color";
+  type: "text" | "textarea" | "color" | "image";
   default: string;
   brand?: "primary" | "secondary" | "accent" | "text" | "surface";
 };
@@ -38,13 +38,14 @@ export type BriefDraft = {
     adminUser: string;
     adminEmail: string;
     adminPassword: string;
+    logoUrl: string;
   };
   brand: {
     colors: { primary: string; secondary: string; text: string; accent: string };
     fonts: { heading: string; body: string };
   };
   theme: string;
-  plugins: { free: string[] };
+  plugins: { free: string[]; premium: string[] };
   pages: PageDraft[];
   menu: { name: string; location: string };
 };
@@ -58,6 +59,18 @@ export type AppliedPage = {
   isFrontPage: boolean;
 };
 
+export type PageCheck = {
+  title: string;
+  url: string;
+  status: number | null;
+  widgetCount: number;
+  phpNotices: string[];
+  ok: boolean;
+  note?: string;
+};
+
+export type VerifyReport = { checks: PageCheck[]; ok: boolean };
+
 export type BuildResult = {
   siteUrl: string;
   adminUrl: string;
@@ -66,6 +79,7 @@ export type BuildResult = {
   sitePath: string;
   briefPath: string;
   pages: AppliedPage[];
+  verification?: VerifyReport;
 };
 
 export function uid(): string {
@@ -90,6 +104,7 @@ export function emptyBrief(): BriefDraft {
       adminUser: "admin",
       adminEmail: "",
       adminPassword: "",
+      logoUrl: "",
     },
     brand: {
       colors: {
@@ -101,7 +116,7 @@ export function emptyBrief(): BriefDraft {
       fonts: { heading: "Poppins", body: "Inter" },
     },
     theme: "hello-elementor",
-    plugins: { free: ["elementor"] },
+    plugins: { free: ["elementor"], premium: [] },
     pages: [
       {
         uid: uid(),
@@ -124,7 +139,11 @@ export function toPayload(draft: BriefDraft) {
     },
     brand: draft.brand,
     theme: draft.theme,
-    plugins: { free: draft.plugins.free, premium: [] },
+    plugins: {
+      free: draft.plugins.free,
+      // The server resolves each name against vendor-plugins/.
+      premium: draft.plugins.premium.map((zip) => ({ zip })),
+    },
     pages: draft.pages.map((page) => ({
       title: page.title,
       slug: page.slug,

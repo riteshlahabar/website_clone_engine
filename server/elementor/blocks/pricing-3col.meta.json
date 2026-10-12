@@ -1,0 +1,183 @@
+{
+  "id": "pricing-3col",
+  "name": "Three pricing plans",
+  "description": "Three plan cards with price, feature list and button. The middle card is highlighted.",
+  "params": [
+    {
+      "key": "heading",
+      "label": "Section heading",
+      "type": "text",
+      "default": "Simple pricing"
+    },
+    {
+      "key": "plan1Name",
+      "label": "Plan 1 name",
+      "type": "text",
+      "default": "Basic"
+    },
+    {
+      "key": "plan1Price",
+      "label": "Plan 1 price",
+      "type": "text",
+      "default": "₹999"
+    },
+    {
+      "key": "plan1Note",
+      "label": "Plan 1 note",
+      "type": "text",
+      "default": "per visit"
+    },
+    {
+      "key": "plan1Feature1",
+      "label": "Plan 1 feature 1",
+      "type": "text",
+      "default": "Initial consultation"
+    },
+    {
+      "key": "plan1Feature2",
+      "label": "Plan 1 feature 2",
+      "type": "text",
+      "default": "Written estimate"
+    },
+    {
+      "key": "plan1Feature3",
+      "label": "Plan 1 feature 3",
+      "type": "text",
+      "default": "Email support"
+    },
+    {
+      "key": "plan1ButtonText",
+      "label": "Plan 1 button",
+      "type": "text",
+      "default": "Choose Basic"
+    },
+    {
+      "key": "plan2Name",
+      "label": "Plan 2 name",
+      "type": "text",
+      "default": "Standard"
+    },
+    {
+      "key": "plan2Price",
+      "label": "Plan 2 price",
+      "type": "text",
+      "default": "₹2,499"
+    },
+    {
+      "key": "plan2Note",
+      "label": "Plan 2 note",
+      "type": "text",
+      "default": "per month"
+    },
+    {
+      "key": "plan2Feature1",
+      "label": "Plan 2 feature 1",
+      "type": "text",
+      "default": "Everything in Basic"
+    },
+    {
+      "key": "plan2Feature2",
+      "label": "Plan 2 feature 2",
+      "type": "text",
+      "default": "Priority booking"
+    },
+    {
+      "key": "plan2Feature3",
+      "label": "Plan 2 feature 3",
+      "type": "text",
+      "default": "Phone support"
+    },
+    {
+      "key": "plan2ButtonText",
+      "label": "Plan 2 button",
+      "type": "text",
+      "default": "Choose Standard"
+    },
+    {
+      "key": "plan3Name",
+      "label": "Plan 3 name",
+      "type": "text",
+      "default": "Complete"
+    },
+    {
+      "key": "plan3Price",
+      "label": "Plan 3 price",
+      "type": "text",
+      "default": "₹4,999"
+    },
+    {
+      "key": "plan3Note",
+      "label": "Plan 3 note",
+      "type": "text",
+      "default": "per month"
+    },
+    {
+      "key": "plan3Feature1",
+      "label": "Plan 3 feature 1",
+      "type": "text",
+      "default": "Everything in Standard"
+    },
+    {
+      "key": "plan3Feature2",
+      "label": "Plan 3 feature 2",
+      "type": "text",
+      "default": "Same-day appointments"
+    },
+    {
+      "key": "plan3Feature3",
+      "label": "Plan 3 feature 3",
+      "type": "text",
+      "default": "Dedicated contact"
+    },
+    {
+      "key": "plan3ButtonText",
+      "label": "Plan 3 button",
+      "type": "text",
+      "default": "Choose Complete"
+    },
+    {
+      "key": "buttonUrl",
+      "label": "Button link",
+      "type": "text",
+      "default": "#contact"
+    },
+    {
+      "key": "bgColor",
+      "label": "Background",
+      "type": "color",
+      "default": "#F8FAFC"
+    },
+    {
+      "key": "cardColor",
+      "label": "Card background",
+      "type": "color",
+      "default": "#FFFFFF"
+    },
+    {
+      "key": "featuredColor",
+      "label": "Featured card background",
+      "type": "color",
+      "default": "#FFFFFF"
+    },
+    {
+      "key": "headingColor",
+      "label": "Heading colour",
+      "type": "color",
+      "default": "#1F2937",
+      "brand": "text"
+    },
+    {
+      "key": "textColor",
+      "label": "Body colour",
+      "type": "color",
+      "default": "#4B5563"
+    },
+    {
+      "key": "accentColor",
+      "label": "Accent colour",
+      "type": "color",
+      "default": "#0F766E",
+      "brand": "primary"
+    }
+  ]
+}

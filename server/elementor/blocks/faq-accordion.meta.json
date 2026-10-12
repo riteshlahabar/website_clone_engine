@@ -1,0 +1,20 @@
+{
+  "id": "faq-accordion",
+  "name": "FAQ accordion",
+  "description": "Four collapsible questions and answers.",
+  "params": [
+    { "key": "heading", "label": "Section heading", "type": "text", "default": "Common questions" },
+    { "key": "q1", "label": "Question 1", "type": "text", "default": "How do I book?" },
+    { "key": "a1", "label": "Answer 1", "type": "textarea", "default": "Call us or use the contact form, and we will reply the same day." },
+    { "key": "q2", "label": "Question 2", "type": "text", "default": "What does it cost?" },
+    { "key": "a2", "label": "Answer 2", "type": "textarea", "default": "We give a written estimate before any work starts, so there are no surprises." },
+    { "key": "q3", "label": "Question 3", "type": "text", "default": "Do you take walk-ins?" },
+    { "key": "a3", "label": "Answer 3", "type": "textarea", "default": "Yes, though booking ahead means far less waiting." },
+    { "key": "q4", "label": "Question 4", "type": "text", "default": "Where are you?" },
+    { "key": "a4", "label": "Answer 4", "type": "textarea", "default": "Centrally located, with parking available right outside." },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#F8FAFC" },
+    { "key": "headingColor", "label": "Heading colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Answer colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Accent colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}

@@ -13,7 +13,7 @@ import { PATHS } from "../lib/env.ts";
 export type BlockParam = {
   key: string;
   label: string;
-  type: "text" | "textarea" | "color";
+  type: "text" | "textarea" | "color" | "image";
   default: string;
   /** Links this param to a brand colour so the palette drives the design. */
   brand?: "primary" | "secondary" | "accent" | "text" | "surface";

@@ -1,0 +1,17 @@
+{
+  "id": "text-image-split",
+  "name": "Image beside text",
+  "description": "A picture on the left with a heading, paragraph and button on the right.",
+  "params": [
+    { "key": "heading", "label": "Heading", "type": "text", "default": "Why people choose us" },
+    { "key": "body", "label": "Body text", "type": "textarea", "default": "Two or three sentences about how you work and what makes it different. Keep it concrete rather than boastful." },
+    { "key": "buttonText", "label": "Button text", "type": "text", "default": "Learn more" },
+    { "key": "buttonUrl", "label": "Button link", "type": "text", "default": "#contact" },
+    { "key": "imageUrl", "label": "Image URL", "type": "image", "default": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1000&q=80" },
+    { "key": "imageAlt", "label": "Image description", "type": "text", "default": "Our workspace" },
+    { "key": "bgColor", "label": "Background", "type": "color", "default": "#FFFFFF" },
+    { "key": "headingColor", "label": "Heading colour", "type": "color", "default": "#1F2937", "brand": "text" },
+    { "key": "textColor", "label": "Body colour", "type": "color", "default": "#4B5563" },
+    { "key": "accentColor", "label": "Button colour", "type": "color", "default": "#0F766E", "brand": "primary" }
+  ]
+}

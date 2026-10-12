@@ -9,11 +9,13 @@ import { PATHS } from "./env.ts";
 import type { JobLogger } from "./jobs.ts";
 import { applyContent, type AppliedPage } from "./apply.ts";
 import { provision, type ProvisionResult } from "./provision.ts";
+import { verifySite, type VerifyReport } from "./verify.ts";
 import type { Brief } from "../shared/brief.ts";
 
 export type BuildResult = ProvisionResult & {
   pages: AppliedPage[];
   briefPath: string;
+  verification: VerifyReport;
 };
 
 /** Persist the brief so a build is reproducible and diffable. */
@@ -42,6 +44,11 @@ export async function runBuild(
     logger,
   );
 
+  const sectionCountBySlug = Object.fromEntries(
+    brief.pages.map((page) => [page.slug, page.sections.length]),
+  );
+  const verification = await verifySite(pages, sectionCountBySlug, logger);
+
   logger.success(`Build complete — ${pages.length} page(s) ready at ${provisioned.siteUrl}`);
-  return { ...provisioned, pages, briefPath };
+  return { ...provisioned, pages, briefPath, verification };
 }

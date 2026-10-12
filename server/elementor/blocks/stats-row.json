@@ -1,0 +1,111 @@
+{
+  "elType": "container",
+  "settings": {
+    "content_width": "boxed",
+    "flex_direction": "row",
+    "flex_gap": { "unit": "px", "size": 24, "column": "24", "row": "24" },
+    "flex_wrap": "wrap",
+    "flex_align_items": "stretch",
+    "padding": { "unit": "px", "top": "56", "right": "20", "bottom": "56", "left": "20", "isLinked": false },
+    "background_background": "classic",
+    "background_color": "{{bgColor}}"
+  },
+  "elements": [
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 22, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "counter",
+          "settings": {
+            "starting_number": 0,
+            "ending_number": "{{stat1Number}}",
+            "suffix": "{{stat1Suffix}}",
+            "title": "{{stat1Label}}",
+            "number_color": "{{accentColor}}",
+            "title_color": "{{textColor}}"
+          },
+          "elements": []
+        }
+      ]
+    },
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 22, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "counter",
+          "settings": {
+            "starting_number": 0,
+            "ending_number": "{{stat2Number}}",
+            "suffix": "{{stat2Suffix}}",
+            "title": "{{stat2Label}}",
+            "number_color": "{{accentColor}}",
+            "title_color": "{{textColor}}"
+          },
+          "elements": []
+        }
+      ]
+    },
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 22, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "counter",
+          "settings": {
+            "starting_number": 0,
+            "ending_number": "{{stat3Number}}",
+            "suffix": "{{stat3Suffix}}",
+            "title": "{{stat3Label}}",
+            "number_color": "{{accentColor}}",
+            "title_color": "{{textColor}}"
+          },
+          "elements": []
+        }
+      ]
+    },
+    {
+      "elType": "container",
+      "isInner": true,
+      "settings": {
+        "content_width": "full",
+        "flex_direction": "column",
+        "width": { "unit": "%", "size": 22, "sizes": [] }
+      },
+      "elements": [
+        {
+          "elType": "widget",
+          "widgetType": "counter",
+          "settings": {
+            "starting_number": 0,
+            "ending_number": "{{stat4Number}}",
+            "suffix": "{{stat4Suffix}}",
+            "title": "{{stat4Label}}",
+            "number_color": "{{accentColor}}",
+            "title_color": "{{textColor}}"
+          },
+          "elements": []
+        }
+      ]
+    }
+  ]
+}

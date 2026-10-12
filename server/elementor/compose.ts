@@ -63,14 +63,29 @@ function resolveValues(
   brief: Brief,
 ): Record<string, string> {
   const values: Record<string, string> = {};
+
+  // Pass through extra keys the apply phase injected — notably `<key>_id` for
+  // images it imported into the media library.
+  for (const [key, value] of Object.entries(content)) {
+    if (typeof value === "string") values[key] = value;
+  }
+
   for (const param of block.params) {
     const supplied = content[param.key];
     if (typeof supplied === "string" && supplied.trim() !== "") {
       values[param.key] = supplied;
-      continue;
+    } else {
+      values[param.key] = brandValue(param, brief) ?? param.default;
     }
-    values[param.key] = brandValue(param, brief) ?? param.default;
+
+    // Image templates reference `{{key}}` and `{{key_id}}` as a pair. Without a
+    // definition for the id, an un-imported image would leave a live token
+    // behind and fail validation.
+    if (param.type === "image" && values[`${param.key}_id`] === undefined) {
+      values[`${param.key}_id`] = "";
+    }
   }
+
   return values;
 }
 
@@ -99,11 +114,14 @@ function instantiate(
   const source = node as Record<string, unknown>;
   const output: Record<string, unknown> = {};
 
-  // An element is anything declaring elType; only those get ids.
-  if (typeof source.elType === "string") output.id = nextId();
+  // An element is anything declaring elType; only those get generated ids.
+  const isElement = typeof source.elType === "string";
+  if (isElement) output.id = nextId();
 
   for (const [key, value] of Object.entries(source)) {
-    if (key === "id") continue; // always regenerated
+    // Regenerate an element's own id, but leave `id` alone anywhere else —
+    // settings objects use it for real data, such as an image's attachment id.
+    if (key === "id" && isElement) continue;
     output[key] = instantiate(value, values, nextId);
   }
 
