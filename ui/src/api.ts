@@ -74,3 +74,39 @@ export function streamJob(
   source.onerror = () => source.close();
   return () => source.close();
 }
+
+// --- blocks and builds -------------------------------------------------
+
+import type { BlockMeta, BuildResult } from "./types.ts";
+
+export async function fetchBlocks(): Promise<BlockMeta[]> {
+  const data = await request<{ blocks: BlockMeta[] }>("/api/blocks");
+  return data.blocks;
+}
+
+export type StartBuildResponse =
+  | { ok: true; jobId: string }
+  | { ok: false; errors: string[] };
+
+/**
+ * Start a build. Validation and environment failures come back as a structured
+ * error list rather than a thrown exception, because the form renders them.
+ */
+export async function startBuild(payload: unknown): Promise<StartBuildResponse> {
+  const response = await fetch("/api/build", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const body = (await response.json().catch(() => null)) as
+    | { ok?: boolean; jobId?: string; errors?: string[]; message?: string }
+    | null;
+
+  if (response.ok && body?.jobId) return { ok: true, jobId: body.jobId };
+  return {
+    ok: false,
+    errors: body?.errors ?? [body?.message ?? `Build request failed (${response.status})`],
+  };
+}
+
+export type { BuildResult };

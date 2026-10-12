@@ -7,12 +7,11 @@ user double-clicks `start.bat`, a Fastify server boots, and the browser opens.
 ## Pipeline
 
 ```
-Brief (UI form ⇄ site.yaml)
-  ├─ validate    zod schema
+Brief (UI form → briefs/<slug>.yaml)
+  ├─ validate    zod schema (server/shared/brief.ts)
+  ├─ provision   WP core + database + theme + plugins + permalinks
   ├─ compose     block templates + content → Elementor JSON per page
-  ├─ provision   WP core + database + theme + plugins   (WP-CLI)
-  ├─ apply       pages, _elementor_data, kit styles, menus, media, flush-css
-  └─ verify      HTTP 200s, PHP notice scan, screenshots
+  └─ apply       pages, _elementor_data, front page, menu, flush-css
 ```
 
 Long operations run as background **jobs**; the browser follows them over **SSE**
@@ -84,18 +83,38 @@ Long operations run as background **jobs**; the browser follows them over **SSE*
 
 ```
 server/
-  index.ts          Fastify bootstrap, static UI, SPA fallback
-  lib/env.ts        all filesystem paths + PHP resolution
-  lib/services.ts   start/detect Apache + MariaDB
-  lib/wpcli.ts      the only WP-CLI entry point
-  lib/doctor.ts     preflight checks
-  lib/jobs.ts       job registry + SSE event bus
-  routes/           doctor.ts, jobs.ts
-ui/src/             React app (App.tsx, api.ts, components/)
-php/                eval-file scripts run inside WordPress
-tools/              wp-cli.phar (gitignored)
-vendor-plugins/     premium .zip uploads (gitignored)
+  index.ts              Fastify bootstrap, static UI, SPA fallback
+  lib/env.ts            all filesystem paths + PHP resolution
+  lib/services.ts       start/detect Apache + MariaDB
+  lib/wpcli.ts          the only WP-CLI entry point
+  lib/wpcore.ts         WordPress download + bsdtar unpack
+  lib/doctor.ts         preflight checks
+  lib/jobs.ts           job registry + SSE event bus
+  lib/provision.ts      core, db, theme, plugins, permalinks
+  lib/apply.ts          pages, Elementor data, front page, menu
+  lib/pipeline.ts       orchestrates provision → apply
+  elementor/blocks/     the block library (*.json + *.meta.json)
+  elementor/registry.ts loads and caches blocks
+  elementor/compose.ts  token fill, id assignment, validation
+  shared/brief.ts       zod Brief schema
+  routes/               doctor.ts, jobs.ts, build.ts, blocks.ts
+ui/src/                 React app (App.tsx, api.ts, types.ts, components/)
+php/                    eval-file scripts run inside WordPress
+briefs/                 saved YAML briefs, one per site
+tests/                  vitest suite over the compose engine
+vendor-plugins/         premium .zip uploads (gitignored)
 ```
+
+## Adding a block
+
+1. Build the section by hand in Elementor, export the template, and strip it
+   down to the element tree (`elType` / `widgetType` / `settings` / `elements`).
+   Do not hand-write schema you have not seen Elementor produce.
+2. Save it as `server/elementor/blocks/<id>.json`, replacing text and colours
+   with `{{token}}` placeholders. Remove all `id` fields — compose regenerates them.
+3. Add `<id>.meta.json` declaring every token as a param with a sensible default.
+   Set `brand` on colour params that should follow the palette.
+4. `npm test` — the suite composes every block and fails on malformed output.
 
 ## Known constraints
 
@@ -111,6 +130,42 @@ vendor-plugins/     premium .zip uploads (gitignored)
 
 Newest first. One entry per working session: what changed, why, and what broke.
 When this passes ~150 lines, move older entries to `docs/HISTORY.md` and keep the last ~10 here.
+
+## 2026-10-12 — Phases 1–3: provisioning, Elementor engine, browser form
+
+- **Provisioning works end to end**: WordPress 7.1.3, Hello Elementor 3.5.1,
+  Elementor 4.3.4, database, pretty permalinks, menu and front page.
+- **Elementor engine works**: pages are composed from the block library and written
+  through `php/set-elementor-data.php`. Four blocks so far: `hero-centered`,
+  `features-3col`, `cta-banner`, `page-header`.
+- **Browser form built**: brief editor with brand colour pickers, page management,
+  a block picker, per-section content fields, and drag-reordering via dnd-kit.
+  Build progress streams into the page over SSE; the result panel hands back the
+  site URL, generated admin password and per-page Elementor edit links.
+- Draft is kept in `localStorage` so a reload doesn't lose a half-filled form.
+- 11 vitest tests cover composition, id uniqueness, brand resolution and schema.
+
+**Verified in the browser, not just by API:** filled the form by hand for
+"Lotus Yoga Studio", clicked Build, and got a working site. Separately confirmed
+the Elementor editor opens a generated page and lists Heading / Text Editor /
+Button as native editable widgets — the pass/fail gate for the whole JSON approach.
+
+**Four real bugs found and fixed along the way:**
+1. `wp core download` is unusable on Windows. PHP's `PharData` truncates tar paths
+   at the 100-byte ustar `name` field; WordPress ships paths past that (the
+   php-ai-client provider interfaces), so extraction produced a filename ending in
+   `.` which Windows refuses to create. Its `tar xz` fallback is also unreliable
+   because GNU tar can shadow bsdtar on PATH. Replaced with `lib/wpcore.ts`:
+   fetch `latest.zip`, unpack with `C:\Windows\System32\tar.exe` by absolute path.
+   The archive is cached in `out/` so repeat builds skip the 37MB download.
+2. PHP's default 128M `memory_limit` killed WP-CLI mid-extract. Every WP-CLI call
+   now passes `-d memory_limit=-1`.
+3. `C:\xampp\mysql\bin` is not on PATH, which would have made every `wp db`
+   command fail. The wrapper injects it.
+4. `wp rewrite structure --hard` re-invokes WP-CLI without quoting the phar path
+   and died on the space in "C:\All Project". Two fixes: the phar now installs to
+   `%LOCALAPPDATA%\wp-site-builder\` (space-free), and `.htaccess` is written
+   directly rather than via the subprocess.
 
 ## 2026-10-12 — Phase 0: foundation, Doctor panel, launcher
 

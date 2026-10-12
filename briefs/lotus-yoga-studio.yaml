@@ -1,0 +1,35 @@
+site:
+  name: Lotus Yoga Studio
+  slug: lotus-yoga-studio
+  tagline: Breathe, move, rest
+  adminUser: admin
+  adminEmail: riteshlahabar@gmail.com
+brand:
+  colors:
+    primary: "#0F766E"
+    secondary: "#134E4A"
+    text: "#1F2937"
+    accent: "#F59E0B"
+  fonts:
+    heading: Poppins
+    body: Inter
+theme: hello-elementor
+plugins:
+  free:
+    - elementor
+  premium: []
+pages:
+  - title: Home
+    slug: home
+    isFrontPage: true
+    sections:
+      - block: hero-centered
+        content:
+          heading: Yoga that fits a working week
+          subheading: Small classes in Pune, early mornings and late evenings, for people
+            who sit at a desk all day.
+      - block: features-3col
+        content: {}
+menu:
+  name: Primary
+  location: menu-1
