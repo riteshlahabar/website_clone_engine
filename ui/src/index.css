@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0f172a;
+  --color-panel: #ffffff;
+  --color-shell: #f6f7f9;
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--color-shell); color: var(--color-ink); }

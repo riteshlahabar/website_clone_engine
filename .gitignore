@@ -1,0 +1,10 @@
+node_modules/
+dist/
+out/
+tools/wp-cli.phar
+tools/wp.cmd
+vendor-plugins/*
+!vendor-plugins/.gitkeep
+.env
+*.log
+.DS_Store
