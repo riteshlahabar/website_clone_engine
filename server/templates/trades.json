@@ -1,0 +1,121 @@
+{
+  "id": "trades",
+  "name": "Trades and home services",
+  "description": "Practical two-page site for a plumber, electrician or builder. Leads with the phone number and call-out rates.",
+  "industry": "Trades",
+  "brand": {
+    "colors": { "primary": "#1D4ED8", "secondary": "#1E293B", "text": "#0F172A", "accent": "#EA580C" },
+    "fonts": { "heading": "Montserrat", "body": "Open Sans" }
+  },
+  "theme": "hello-elementor",
+  "plugins": { "free": ["elementor", "contact-form-7"] },
+  "menu": { "name": "Primary", "location": "menu-1" },
+  "pages": [
+    {
+      "title": "Home",
+      "slug": "home",
+      "isFrontPage": true,
+      "sections": [
+        {
+          "block": "hero-centered",
+          "content": {
+            "heading": "Emergency plumbing, seven days a week",
+            "subheading": "Usually with you inside two hours. Fixed call-out charge, quoted before we start.",
+            "buttonText": "Call now",
+            "buttonUrl": "tel:+910000000000"
+          }
+        },
+        {
+          "block": "stats-row",
+          "content": {
+            "stat1Number": "2", "stat1Suffix": "hr", "stat1Label": "Typical response",
+            "stat2Number": "7", "stat2Label": "Days a week",
+            "stat3Number": "15", "stat3Label": "Years on the tools",
+            "stat4Number": "12", "stat4Suffix": "mo", "stat4Label": "Guarantee on work"
+          }
+        },
+        {
+          "block": "features-3col",
+          "content": {
+            "heading": "What we handle",
+            "feature1Title": "Leaks and bursts",
+            "feature1Text": "Traced, isolated and repaired, including behind tiles and under floors.",
+            "feature2Title": "Boilers and heating",
+            "feature2Text": "Servicing, repairs and replacements, all makes.",
+            "feature3Title": "Bathrooms",
+            "feature3Text": "Full installations, or just swapping the one thing that has failed."
+          }
+        },
+        {
+          "block": "pricing-3col",
+          "content": {
+            "heading": "What it costs",
+            "plan1Name": "Standard call-out", "plan1Price": "₹800", "plan1Note": "Mon to Fri, 8am to 6pm",
+            "plan1Feature1": "First hour included", "plan1Feature2": "Quoted before work starts", "plan1Feature3": "Parts at cost plus 10%",
+            "plan1ButtonText": "Book a visit",
+            "plan2Name": "Evening and weekend", "plan2Price": "₹1,400", "plan2Note": "after 6pm and Sundays",
+            "plan2Feature1": "First hour included", "plan2Feature2": "No extra charge on holidays", "plan2Feature3": "Parts at cost plus 10%",
+            "plan2ButtonText": "Book a visit",
+            "plan3Name": "Annual service", "plan3Price": "₹2,200", "plan3Note": "per boiler, per year",
+            "plan3Feature1": "Full safety check", "plan3Feature2": "Written report", "plan3Feature3": "Priority if it fails later",
+            "plan3ButtonText": "Book a service"
+          }
+        },
+        {
+          "block": "testimonials-3col",
+          "content": {
+            "heading": "Recent jobs",
+            "quote1": "Burst pipe at 11pm on a Sunday. Here in ninety minutes, sorted by one.",
+            "name1": "Kothrud", "role1": "Emergency call-out",
+            "quote2": "Quoted half what the first firm wanted and explained why.",
+            "name2": "Baner", "role2": "Boiler replacement",
+            "quote3": "Cleaned up properly afterwards, which is rarer than it should be.",
+            "name3": "Aundh", "role3": "Bathroom fit"
+          }
+        },
+        {
+          "block": "cta-banner",
+          "content": {
+            "heading": "Water coming through the ceiling?",
+            "subheading": "Turn the stopcock off and call. We will talk you through it until we arrive.",
+            "buttonText": "Call now",
+            "buttonUrl": "tel:+910000000000"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Get in touch", "subheading": "Call for anything urgent. Email for quotes." }
+        },
+        {
+          "block": "contact-split",
+          "content": {
+            "heading": "Call, or send the details",
+            "intro": "For emergencies, phone. For quotes, send a photo of the problem and we will come back the same day.",
+            "hours": "Mon to Sat 8am to 6pm, emergencies any time"
+          }
+        },
+        {
+          "block": "faq-accordion",
+          "content": {
+            "heading": "Before you call",
+            "q1": "How quickly can you come?",
+            "a1": "Within two hours for emergencies in the city, usually sooner outside rush hour.",
+            "q2": "Do you charge to quote?",
+            "a2": "No. Quotes for planned work are free and in writing.",
+            "q3": "Are you insured?",
+            "a3": "Fully insured and happy to show the certificate before starting.",
+            "q4": "Do you guarantee the work?",
+            "a4": "Twelve months on labour, and whatever the manufacturer gives on parts."
+          }
+        }
+      ]
+    }
+  ]
+}

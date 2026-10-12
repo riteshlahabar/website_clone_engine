@@ -1,0 +1,136 @@
+{
+  "id": "fitness-studio",
+  "name": "Fitness or yoga studio",
+  "description": "Energetic site for a studio or gym: classes, membership pricing, timetable questions and a map.",
+  "industry": "Fitness and wellbeing",
+  "brand": {
+    "colors": { "primary": "#7C3AED", "secondary": "#2E1065", "text": "#18181B", "accent": "#EC4899" },
+    "fonts": { "heading": "Montserrat", "body": "Inter" }
+  },
+  "theme": "hello-elementor",
+  "plugins": { "free": ["elementor", "contact-form-7"] },
+  "menu": { "name": "Primary", "location": "menu-1" },
+  "pages": [
+    {
+      "title": "Home",
+      "slug": "home",
+      "isFrontPage": true,
+      "sections": [
+        {
+          "block": "hero-centered",
+          "content": {
+            "heading": "Classes that fit a working week",
+            "subheading": "Early mornings and late evenings, in small groups, for people who sit at a desk all day.",
+            "buttonText": "Book a free trial",
+            "buttonUrl": "#contact"
+          }
+        },
+        {
+          "block": "features-3col",
+          "content": {
+            "heading": "What we run",
+            "feature1Title": "Strength",
+            "feature1Text": "Barbell basics in groups of six, coached every session.",
+            "feature2Title": "Mobility and yoga",
+            "feature2Text": "Unhurried classes aimed at stiff hips and tired shoulders.",
+            "feature3Title": "Conditioning",
+            "feature3Text": "Forty minutes, no equipment to learn, finished before work."
+          }
+        },
+        {
+          "block": "stats-row",
+          "content": {
+            "stat1Number": "6", "stat1Label": "People per class",
+            "stat2Number": "28", "stat2Label": "Classes a week",
+            "stat3Number": "5", "stat3Suffix": "am", "stat3Label": "Earliest start",
+            "stat4Number": "0", "stat4Label": "Joining fee"
+          }
+        },
+        {
+          "block": "text-image-split",
+          "content": {
+            "heading": "Nobody starts fit",
+            "body": "Most people arrive having done nothing for years, and that is the normal case here rather than the exception. Every movement has an easier version, and the coach will give it to you before you have to ask.",
+            "buttonText": "Try a class free",
+            "buttonUrl": "#contact",
+            "imageUrl": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1000&q=80",
+            "imageAlt": "A class in progress"
+          }
+        },
+        {
+          "block": "pricing-3col",
+          "content": {
+            "heading": "Membership",
+            "plan1Name": "Pay as you go", "plan1Price": "₹600", "plan1Note": "per class",
+            "plan1Feature1": "No commitment", "plan1Feature2": "Book up to a week ahead", "plan1Feature3": "Expires after 90 days",
+            "plan1ButtonText": "Buy a class",
+            "plan2Name": "Twice a week", "plan2Price": "₹3,800", "plan2Note": "per month",
+            "plan2Feature1": "Eight classes a month", "plan2Feature2": "Priority booking", "plan2Feature3": "Pause any month",
+            "plan2ButtonText": "Join",
+            "plan3Name": "Unlimited", "plan3Price": "₹5,900", "plan3Note": "per month",
+            "plan3Feature1": "Every class, every day", "plan3Feature2": "One guest pass a month", "plan3Feature3": "Free programme review",
+            "plan3ButtonText": "Join"
+          }
+        },
+        {
+          "block": "testimonials-3col",
+          "content": {
+            "heading": "Members",
+            "quote1": "First gym where nobody made me feel like an idiot on day one.",
+            "name1": "Joined 2025", "role1": "Strength",
+            "quote2": "My back has stopped hurting at work. That is the whole review.",
+            "name2": "Joined 2026", "role2": "Mobility",
+            "quote3": "The 6am class means it is done before the day starts.",
+            "name3": "Joined 2024", "role3": "Conditioning"
+          }
+        },
+        {
+          "block": "cta-banner",
+          "content": {
+            "heading": "First class is free",
+            "subheading": "Turn up in whatever you own. We have mats, water and somewhere to change.",
+            "buttonText": "Book a free trial",
+            "buttonUrl": "#contact"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Timetable",
+      "slug": "timetable",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Timetable", "subheading": "When everything runs, and how booking works." }
+        },
+        {
+          "block": "faq-accordion",
+          "content": {
+            "heading": "Booking and classes",
+            "q1": "How far ahead can I book?",
+            "a1": "Seven days for members, two days on pay-as-you-go.",
+            "q2": "What if I have to cancel?",
+            "a2": "Cancel more than four hours before and the class goes back into your allowance.",
+            "q3": "Do I need my own equipment?",
+            "a3": "No. Mats, bands and everything else are here. Bring a towel and water.",
+            "q4": "Is there somewhere to shower?",
+            "a4": "Two showers and lockers. Bring a padlock or borrow one at reception."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Contact", "subheading": "Where we are and how to reach us." }
+        },
+        { "block": "contact-split", "content": { "heading": "Find the studio", "hours": "Mon to Fri 5am to 9pm, Sat and Sun 7am to 2pm" } }
+      ]
+    }
+  ]
+}

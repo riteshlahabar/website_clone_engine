@@ -1,0 +1,129 @@
+site:
+  name: The Copper Pot
+  slug: the-copper-pot
+  tagline: Breathe, move, rest
+  adminUser: admin
+  adminEmail: riteshlahabar@gmail.com
+  logoUrl: ""
+brand:
+  colors:
+    primary: "#9A3412"
+    secondary: "#431407"
+    text: "#1C1917"
+    accent: "#CA8A04"
+  fonts:
+    heading: Playfair Display
+    body: Lato
+theme: hello-elementor
+plugins:
+  free:
+    - elementor
+  premium: []
+pages:
+  - title: Home
+    slug: home
+    isFrontPage: true
+    sections:
+      - block: hero-centered
+        content:
+          heading: Slow food, small room
+          subheading: Twenty-four covers, one menu a day, written each morning after the
+            market.
+          buttonText: See today's menu
+          buttonUrl: /menu/
+      - block: text-image-split
+        content:
+          heading: The kitchen
+          body: We cook what looked good that morning, so the menu changes daily and we
+            never write it far in advance. If something matters to you, tell us
+            when you book and we will work around it.
+          buttonText: Book a table
+          buttonUrl: "#contact"
+          imageUrl: https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1000&q=80
+          imageAlt: The dining room
+      - block: features-3col
+        content:
+          heading: What to expect
+          feature1Title: One daily menu
+          feature1Text: Three courses, written that morning, usually two choices each.
+          feature2Title: Short wine list
+          feature2Text: Thirty bottles we actually like, most under a thousand rupees.
+          feature3Title: No rush
+          feature3Text: Your table is yours for the evening. We only seat it once.
+      - block: testimonials-3col
+        content:
+          heading: Kind words
+          quote1: The sort of place you want to keep to yourself.
+          name1: A regular
+          role1: Since 2023
+          quote2: Handled a nut allergy without any fuss and without a boring plate.
+          name2: First visit
+          role2: "2026"
+          quote3: Three hours disappeared. No idea where they went.
+          name3: Anniversary dinner
+          role3: "2026"
+      - block: cta-banner
+        content:
+          heading: Tables go about ten days ahead
+          subheading: We hold a few seats at the counter for walk-ins each evening.
+          buttonText: Book a table
+          buttonUrl: "#contact"
+  - title: Menu
+    slug: menu
+    isFrontPage: false
+    sections:
+      - block: page-header
+        content:
+          heading: Menu
+          subheading: Changes daily. This is the shape of it.
+      - block: pricing-3col
+        content:
+          heading: How dinner works
+          plan1Name: Two courses
+          plan1Price: ₹1,400
+          plan1Note: per person
+          plan1Feature1: Starter and main
+          plan1Feature2: Bread and butter
+          plan1Feature3: Two choices each course
+          plan1ButtonText: Book a table
+          plan2Name: Three courses
+          plan2Price: ₹1,850
+          plan2Note: per person
+          plan2Feature1: Starter, main, pudding
+          plan2Feature2: Bread and butter
+          plan2Feature3: Two choices each course
+          plan2ButtonText: Book a table
+          plan3Name: Counter menu
+          plan3Price: ₹2,600
+          plan3Note: per person, six seats
+          plan3Feature1: Six smaller courses
+          plan3Feature2: Cooked in front of you
+          plan3Feature3: Wine pairing available
+          plan3ButtonText: Book the counter
+      - block: faq-accordion
+        content:
+          heading: Before you come
+          q1: Can you cater for allergies?
+          a1: Almost always, if you tell us when booking. Same-evening requests are harder
+            on a single daily menu.
+          q2: Is there a vegetarian option?
+          a2: One of the two choices at each course is vegetarian, every day.
+          q3: Do you take walk-ins?
+          a3: A few counter seats are held back each evening. Come early.
+          q4: Is there parking?
+          a4: Street parking after 7pm, and a paid lot two minutes away.
+  - title: Find us
+    slug: find-us
+    isFrontPage: false
+    sections:
+      - block: page-header
+        content:
+          heading: Find us
+          subheading: Booking, directions and opening hours.
+      - block: contact-split
+        content:
+          heading: Booking and directions
+          hours: Tue to Sat, dinner only, from 7pm
+menu:
+  name: Primary
+  location: menu-1

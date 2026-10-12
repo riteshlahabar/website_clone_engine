@@ -9,8 +9,10 @@ import {
 import BriefForm from "./components/BriefForm.tsx";
 import BuildPanel from "./components/BuildPanel.tsx";
 import Doctor from "./components/Doctor.tsx";
+import TemplatePicker from "./components/TemplatePicker.tsx";
 import {
   emptyBrief,
+  normalizeDraft,
   toPayload,
   type BlockMeta,
   type BriefDraft,
@@ -23,7 +25,7 @@ const DRAFT_KEY = "wp-site-builder:draft";
 function loadDraft(): BriefDraft {
   try {
     const stored = localStorage.getItem(DRAFT_KEY);
-    if (stored) return JSON.parse(stored) as BriefDraft;
+    if (stored) return normalizeDraft(JSON.parse(stored));
   } catch {
     // Private windows and blocked storage both land here; the default is fine.
   }
@@ -105,6 +107,8 @@ export default function App() {
           error={failure}
           onDismiss={() => setStatus(null)}
         />
+
+        <TemplatePicker draft={draft} disabled={busy} onApply={setDraft} />
 
         <BriefForm
           draft={draft}

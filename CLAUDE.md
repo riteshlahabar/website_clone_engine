@@ -107,6 +107,16 @@ tests/                  vitest suite over the compose engine
 vendor-plugins/         premium .zip uploads (gitignored)
 ```
 
+## Adding a starter template
+
+Templates live in `server/templates/*.json` and are a whole brief minus the `site`
+block — pages, sections, copy, palette and fonts. The filename must match the `id`.
+Applying one never overwrites business name, slug, email, logo or password.
+
+Tests enforce that every template references real blocks, sets only content keys the
+block declares (a typo would otherwise be silently dropped), has exactly one front page,
+and composes to a valid document.
+
 ## Adding a block
 
 1. Build the section by hand in Elementor, export the template, and strip it
@@ -148,6 +158,25 @@ To re-check on another install, inspect the class behind each widget — a stub 
 
 Newest first. One entry per working session: what changed, why, and what broke.
 When this passes ~150 lines, move older entries to `docs/HISTORY.md` and keep the last ~10 here.
+
+## 2026-10-12 — Phase 5: starter templates
+
+- Five templates in `server/templates/`: dental clinic, law firm, restaurant/café,
+  fitness studio, trades. Each is a complete 2–3 page brief with real copy, a palette
+  and fonts. Picking one fills the form; business details are never overwritten.
+- `templates/registry.ts` validates every file against the zod schema at load, so a
+  broken template fails on startup rather than halfway through a build.
+- Tests 21 → 29.
+
+**Bug found by driving the UI, and it would have hit any existing user:** a draft saved
+in `localStorage` under an older schema came back missing `plugins.premium`, and
+`toPayload` called `.map()` on it. The Build button silently did nothing — no error in
+the UI, just a console `TypeError`. Added `normalizeDraft()`, which merges any stored
+draft against current defaults and guarantees one front page, plus six tests covering
+the legacy shape and junk input.
+
+Also replaced `window.confirm` in the template picker with an inline confirm: a native
+modal blocks the page and reads as an error rather than a choice.
 
 ## 2026-10-12 — Phase 4: blocks, global kit, images, premium upload, verify
 

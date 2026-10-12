@@ -130,6 +130,53 @@ export function emptyBrief(): BriefDraft {
   };
 }
 
+/**
+ * Bring a stored draft up to the current shape.
+ *
+ * Drafts are persisted to localStorage, so one saved before a field existed
+ * comes back missing it — and an absent `plugins.premium` used to crash the
+ * build button outright. Merge against the defaults rather than trusting it.
+ */
+export function normalizeDraft(stored: unknown): BriefDraft {
+  const base = emptyBrief();
+  if (!stored || typeof stored !== "object") return base;
+  const draft = stored as Partial<BriefDraft>;
+
+  const pages = Array.isArray(draft.pages) && draft.pages.length > 0
+    ? draft.pages.map((page) => ({
+        uid: page?.uid ?? uid(),
+        title: page?.title ?? "Page",
+        slug: page?.slug ?? "page",
+        isFrontPage: Boolean(page?.isFrontPage),
+        sections: Array.isArray(page?.sections)
+          ? page.sections.map((section) => ({
+              uid: section?.uid ?? uid(),
+              block: section?.block ?? "",
+              content: section?.content ?? {},
+            }))
+          : [],
+      }))
+    : base.pages;
+
+  return {
+    site: { ...base.site, ...(draft.site ?? {}) },
+    brand: {
+      colors: { ...base.brand.colors, ...(draft.brand?.colors ?? {}) },
+      fonts: { ...base.brand.fonts, ...(draft.brand?.fonts ?? {}) },
+    },
+    theme: draft.theme || base.theme,
+    plugins: {
+      free: Array.isArray(draft.plugins?.free) ? draft.plugins.free : base.plugins.free,
+      premium: Array.isArray(draft.plugins?.premium) ? draft.plugins.premium : [],
+    },
+    // A draft with no front page would silently build the blog index instead.
+    pages: pages.some((page) => page.isFrontPage)
+      ? pages
+      : pages.map((page, index) => ({ ...page, isFrontPage: index === 0 })),
+    menu: { ...base.menu, ...(draft.menu ?? {}) },
+  };
+}
+
 /** Strip client-only fields before sending to the API. */
 export function toPayload(draft: BriefDraft) {
   return {

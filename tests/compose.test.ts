@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { composePage, validateDocument } from "../server/elementor/compose.ts";
 import { getBlock, listBlocks } from "../server/elementor/registry.ts";
+import { getTemplate, listTemplates } from "../server/templates/registry.ts";
 import { briefSchema, type Brief, type Page } from "../server/shared/brief.ts";
 
 const BRAND = {
@@ -207,6 +208,88 @@ describe("block library coverage", () => {
       ].map((match) => match[1]!);
       const offenders = used.filter((widget) => proOnly.includes(widget));
       expect(offenders, `block ${meta.id} uses Pro widgets`).toEqual([]);
+    }
+  });
+});
+
+describe("starter templates", () => {
+  it("loads and validates every template file", async () => {
+    const templates = await listTemplates();
+    expect(templates.length).toBeGreaterThan(0);
+    for (const template of templates) {
+      expect(template.pageCount).toBeGreaterThan(0);
+      expect(template.sectionCount).toBeGreaterThan(0);
+    }
+  });
+
+  it("references only blocks that exist", async () => {
+    for (const summary of await listTemplates()) {
+      const template = await getTemplate(summary.id);
+      for (const page of template.pages) {
+        for (const section of page.sections) {
+          // getBlock throws on an unknown id, which is the assertion.
+          await expect(getBlock(section.block)).resolves.toBeDefined();
+        }
+      }
+    }
+  });
+
+  it("only sets content keys the chosen block declares", async () => {
+    for (const summary of await listTemplates()) {
+      const template = await getTemplate(summary.id);
+      for (const page of template.pages) {
+        for (const section of page.sections) {
+          const block = await getBlock(section.block);
+          const declared = new Set(block.params.map((param) => param.key));
+          const unknown = Object.keys(section.content).filter(
+            (key) => !declared.has(key),
+          );
+          // A typo'd key is silently ignored at compose time, so the copy just
+          // never appears. Catch it here instead.
+          expect(
+            unknown,
+            `${summary.id} / ${page.slug} / ${section.block}`,
+          ).toEqual([]);
+        }
+      }
+    }
+  });
+
+  it("composes every template page into a valid document", async () => {
+    for (const summary of await listTemplates()) {
+      const template = await getTemplate(summary.id);
+      const brief = briefSchema.parse({
+        site: { name: "T", slug: "t", adminEmail: "a@b.com" },
+        brand: template.brand,
+        theme: template.theme,
+        plugins: { free: template.plugins.free, premium: [] },
+        pages: template.pages,
+        menu: template.menu,
+      });
+
+      for (const page of brief.pages) {
+        const elements = await composePage(page, brief);
+        expect(
+          validateDocument(elements),
+          `${summary.id} / ${page.slug}`,
+        ).toEqual([]);
+      }
+    }
+  });
+
+  it("gives each template exactly one front page", async () => {
+    for (const summary of await listTemplates()) {
+      const template = await getTemplate(summary.id);
+      const fronts = template.pages.filter((page) => page.isFrontPage);
+      expect(fronts.length, `${summary.id}`).toBe(1);
+    }
+  });
+
+  it("uses unique page slugs within a template", async () => {
+    for (const summary of await listTemplates()) {
+      const template = await getTemplate(summary.id);
+      const slugs = template.pages.map((page) => page.slug);
+      expect(new Set(slugs).size, `${summary.id}`).toBe(slugs.length);
     }
   });
 });

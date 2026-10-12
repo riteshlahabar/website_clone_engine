@@ -16,6 +16,7 @@ import { registerBuildRoutes } from "./routes/build.ts";
 import { registerDoctorRoutes } from "./routes/doctor.ts";
 import { registerJobRoutes } from "./routes/jobs.ts";
 import { registerPluginRoutes } from "./routes/plugins.ts";
+import { registerTemplateRoutes } from "./routes/templates.ts";
 
 const app = Fastify({
   logger: { level: process.env.LOG_LEVEL ?? "warn" },
@@ -34,6 +35,7 @@ registerJobRoutes(app);
 registerBuildRoutes(app);
 registerBlockRoutes(app);
 registerPluginRoutes(app);
+registerTemplateRoutes(app);
 
 app.get("/api/health", async () => ({ ok: true, port: SERVER_PORT }));
 

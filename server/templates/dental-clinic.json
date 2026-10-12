@@ -1,0 +1,137 @@
+{
+  "id": "dental-clinic",
+  "name": "Dental clinic",
+  "description": "Reassuring three-page site for a dental or medical practice, with services, pricing and a map.",
+  "industry": "Healthcare",
+  "brand": {
+    "colors": { "primary": "#0F766E", "secondary": "#134E4A", "text": "#1F2937", "accent": "#F59E0B" },
+    "fonts": { "heading": "Poppins", "body": "Inter" }
+  },
+  "theme": "hello-elementor",
+  "plugins": { "free": ["elementor", "contact-form-7"] },
+  "menu": { "name": "Primary", "location": "menu-1" },
+  "pages": [
+    {
+      "title": "Home",
+      "slug": "home",
+      "isFrontPage": true,
+      "sections": [
+        {
+          "block": "hero-centered",
+          "content": {
+            "heading": "Gentle dentistry, honest advice",
+            "subheading": "A calm clinic for people who would rather be anywhere else.",
+            "buttonText": "Book an appointment",
+            "buttonUrl": "#contact"
+          }
+        },
+        {
+          "block": "features-3col",
+          "content": {
+            "heading": "What we do",
+            "feature1Title": "Preventive care",
+            "feature1Text": "Check-ups and cleaning that keep small problems small.",
+            "feature2Title": "Cosmetic work",
+            "feature2Text": "Whitening, veneers and alignment, done conservatively.",
+            "feature3Title": "Emergency help",
+            "feature3Text": "Same-day appointments when something goes wrong."
+          }
+        },
+        {
+          "block": "stats-row",
+          "content": {
+            "stat1Number": "12", "stat1Label": "Years in practice",
+            "stat2Number": "4800", "stat2Suffix": "+", "stat2Label": "Patients treated",
+            "stat3Number": "98", "stat3Suffix": "%", "stat3Label": "Would recommend",
+            "stat4Number": "6", "stat4Label": "Days a week open"
+          }
+        },
+        {
+          "block": "testimonials-3col",
+          "content": {
+            "heading": "What patients say",
+            "quote1": "I have avoided dentists for a decade. They made it genuinely painless.",
+            "name1": "A. Sharma", "role1": "Patient",
+            "quote2": "Explained every option and the cost before touching anything.",
+            "name2": "R. Patel", "role2": "Patient",
+            "quote3": "Fitted me in the same morning when a filling came loose.",
+            "name3": "M. Desai", "role3": "Patient"
+          }
+        },
+        {
+          "block": "cta-banner",
+          "content": {
+            "heading": "Still putting it off?",
+            "subheading": "Most first visits take twenty minutes and involve no drilling at all.",
+            "buttonText": "Book a first visit",
+            "buttonUrl": "#contact"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Treatments",
+      "slug": "treatments",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Treatments", "subheading": "What we treat, and what it costs." }
+        },
+        {
+          "block": "features-3col",
+          "content": {
+            "heading": "Common treatments",
+            "feature1Title": "Scaling and polishing",
+            "feature1Text": "Removes the plaque a brush cannot reach.",
+            "feature2Title": "Fillings",
+            "feature2Text": "Tooth-coloured composite, matched to your enamel.",
+            "feature3Title": "Root canal",
+            "feature3Text": "Under local anaesthetic, in one or two sittings."
+          }
+        },
+        {
+          "block": "pricing-3col",
+          "content": {
+            "heading": "Straightforward pricing",
+            "plan1Name": "Consultation", "plan1Price": "₹500", "plan1Note": "one visit",
+            "plan1Feature1": "Full examination", "plan1Feature2": "Written estimate", "plan1Feature3": "No obligation",
+            "plan1ButtonText": "Book a consultation",
+            "plan2Name": "Clean and check", "plan2Price": "₹1,800", "plan2Note": "every six months",
+            "plan2Feature1": "Scaling and polishing", "plan2Feature2": "X-rays if needed", "plan2Feature3": "Priority booking",
+            "plan2ButtonText": "Book a clean",
+            "plan3Name": "Family plan", "plan3Price": "₹4,500", "plan3Note": "per year, up to four people",
+            "plan3Feature1": "Two cleans each", "plan3Feature2": "Emergency cover", "plan3Feature3": "10% off treatments",
+            "plan3ButtonText": "Join the plan"
+          }
+        },
+        {
+          "block": "faq-accordion",
+          "content": {
+            "heading": "Questions patients ask",
+            "q1": "Will it hurt?",
+            "a1": "We numb thoroughly before anything begins, and we stop the moment you raise a hand.",
+            "q2": "Do you take emergencies?",
+            "a2": "Yes. Call before 11am and we will almost always see you the same day.",
+            "q3": "Can I pay in instalments?",
+            "a3": "For treatment over ₹10,000 we can split payment across three months at no extra cost.",
+            "q4": "Do you treat children?",
+            "a4": "We do, from about age three. First visits for children are free."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Contact", "subheading": "Find us, or send a message." }
+        },
+        { "block": "contact-split", "content": { "heading": "Come and see us" } }
+      ]
+    }
+  ]
+}

@@ -139,3 +139,45 @@ export async function deletePremiumZip(name: string): Promise<void> {
     method: "DELETE",
   });
 }
+
+// --- starter templates --------------------------------------------------
+
+export type TemplateSummary = {
+  id: string;
+  name: string;
+  description: string;
+  industry: string;
+  pageCount: number;
+  sectionCount: number;
+  colors: { primary: string; secondary: string; text: string; accent: string };
+};
+
+export type SiteTemplate = {
+  id: string;
+  name: string;
+  brand: {
+    colors: TemplateSummary["colors"];
+    fonts: { heading: string; body: string };
+  };
+  theme: string;
+  plugins: { free: string[] };
+  menu: { name: string; location: string };
+  pages: Array<{
+    title: string;
+    slug: string;
+    isFrontPage: boolean;
+    sections: Array<{ block: string; content: Record<string, string> }>;
+  }>;
+};
+
+export async function fetchTemplates(): Promise<TemplateSummary[]> {
+  const data = await request<{ templates: TemplateSummary[] }>("/api/templates");
+  return data.templates;
+}
+
+export async function fetchTemplate(id: string): Promise<SiteTemplate> {
+  const data = await request<{ template: SiteTemplate }>(
+    `/api/templates/${encodeURIComponent(id)}`,
+  );
+  return data.template;
+}

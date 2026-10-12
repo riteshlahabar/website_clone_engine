@@ -1,0 +1,123 @@
+{
+  "id": "law-firm",
+  "name": "Law firm",
+  "description": "Sober, credible site for solicitors, accountants or consultants. Practice areas, fees and an enquiry page.",
+  "industry": "Professional services",
+  "brand": {
+    "colors": { "primary": "#1E3A8A", "secondary": "#172554", "text": "#111827", "accent": "#B45309" },
+    "fonts": { "heading": "Playfair Display", "body": "Source Sans 3" }
+  },
+  "theme": "hello-elementor",
+  "plugins": { "free": ["elementor", "contact-form-7"] },
+  "menu": { "name": "Primary", "location": "menu-1" },
+  "pages": [
+    {
+      "title": "Home",
+      "slug": "home",
+      "isFrontPage": true,
+      "sections": [
+        {
+          "block": "hero-centered",
+          "content": {
+            "heading": "Law without the jargon",
+            "subheading": "We explain your options in words you can act on, and tell you what each one costs.",
+            "buttonText": "Request a call back",
+            "buttonUrl": "#contact"
+          }
+        },
+        {
+          "block": "features-3col",
+          "content": {
+            "heading": "Practice areas",
+            "feature1Title": "Property",
+            "feature1Text": "Conveyancing, leases and boundary disputes.",
+            "feature2Title": "Family",
+            "feature2Text": "Separation, children arrangements and wills.",
+            "feature3Title": "Business",
+            "feature3Text": "Contracts, incorporation and employment matters."
+          }
+        },
+        {
+          "block": "text-image-split",
+          "content": {
+            "heading": "How we work",
+            "body": "You get one named solicitor, not a case number passed between desks. We agree a fee before starting, and we write to you in plain English."
+          }
+        },
+        {
+          "block": "testimonials-3col",
+          "content": {
+            "heading": "Client feedback",
+            "quote1": "Told me honestly that I did not have a case. Saved me thousands.",
+            "name1": "Property client", "role1": "2026",
+            "quote2": "Completed our purchase three weeks faster than the previous firm managed.",
+            "name2": "Conveyancing client", "role2": "2026",
+            "quote3": "Difficult circumstances handled with real tact.",
+            "name3": "Family client", "role3": "2025"
+          }
+        },
+        {
+          "block": "cta-banner",
+          "content": {
+            "heading": "Not sure where you stand?",
+            "subheading": "The first twenty-minute conversation is free and carries no obligation.",
+            "buttonText": "Arrange a call",
+            "buttonUrl": "#contact"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Fees",
+      "slug": "fees",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Fees", "subheading": "What we charge, written down before we begin." }
+        },
+        {
+          "block": "pricing-3col",
+          "content": {
+            "heading": "Fixed-fee services",
+            "plan1Name": "Simple will", "plan1Price": "₹6,000", "plan1Note": "fixed fee",
+            "plan1Feature1": "One consultation", "plan1Feature2": "Drafting and revisions", "plan1Feature3": "Signing appointment",
+            "plan1ButtonText": "Enquire",
+            "plan2Name": "Conveyancing", "plan2Price": "₹25,000", "plan2Note": "plus disbursements",
+            "plan2Feature1": "Searches and enquiries", "plan2Feature2": "Contract review", "plan2Feature3": "Completion handling",
+            "plan2ButtonText": "Enquire",
+            "plan3Name": "Hourly advice", "plan3Price": "₹3,500", "plan3Note": "per hour, billed in six-minute units",
+            "plan3Feature1": "No minimum engagement", "plan3Feature2": "Written summary after each call", "plan3Feature3": "Monthly statements",
+            "plan3ButtonText": "Enquire"
+          }
+        },
+        {
+          "block": "faq-accordion",
+          "content": {
+            "heading": "About fees",
+            "q1": "Are the fixed fees really fixed?",
+            "a1": "Yes. If the matter turns out to be more complex we tell you before doing the work, and you decide.",
+            "q2": "What are disbursements?",
+            "a2": "Costs we pay on your behalf, such as search fees and stamp duty. We list them separately at cost.",
+            "q3": "Do you offer no-win-no-fee?",
+            "a3": "For some dispute work, yes. We will say at the first meeting whether your matter qualifies.",
+            "q4": "When do I pay?",
+            "a4": "Fixed-fee work is payable on completion. Hourly work is billed monthly."
+          }
+        }
+      ]
+    },
+    {
+      "title": "Contact",
+      "slug": "contact",
+      "isFrontPage": false,
+      "sections": [
+        {
+          "block": "page-header",
+          "content": { "heading": "Contact", "subheading": "Call, write, or come to the office." }
+        },
+        { "block": "contact-split", "content": { "heading": "Where to find us" } }
+      ]
+    }
+  ]
+}
