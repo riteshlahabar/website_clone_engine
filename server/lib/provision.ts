@@ -8,8 +8,10 @@ import { randomBytes } from "node:crypto";
 import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
+import { requireEmptyDatabase } from "./db.ts";
 import { DB, PATHS, siteUrlFor, sitePathFor } from "./env.ts";
 import type { JobLogger } from "./jobs.ts";
+import type { ProvisionTarget } from "./target.ts";
 import { wp } from "./wpcli.ts";
 import { ensureWordPressCore } from "./wpcore.ts";
 import type { Brief } from "../shared/brief.ts";
@@ -53,10 +55,10 @@ async function run(
  */
 async function writeHtaccess(
   sitePath: string,
-  slug: string,
+  rewriteBase: string,
   logger: JobLogger,
 ): Promise<void> {
-  const base = `/${slug}/`;
+  const base = `/${rewriteBase}/`;
   const rules = [
     "# BEGIN WordPress",
     "<IfModule mod_rewrite.c>",
@@ -75,14 +77,34 @@ async function writeHtaccess(
   logger.log("Wrote .htaccess rewrite rules.");
 }
 
+/**
+ * Where a site goes and which database it uses. Omitted by the brief-based
+ * builder, which derives both from the slug; supplied by the clone pipeline,
+ * where the user names the folder and creates the database themselves.
+ */
+export type ProvisionOptions = {
+  target?: ProvisionTarget;
+  /**
+   * Require a database that already exists and is empty, instead of creating
+   * one. The contract the clone panel advertises, and the guard that stops an
+   * install landing on top of someone's existing tables.
+   */
+  requireEmptyDatabase?: boolean;
+};
+
 export async function provision(
   brief: Brief,
   logger: JobLogger,
+  options: ProvisionOptions = {},
 ): Promise<ProvisionResult> {
   const { slug } = brief.site;
-  const sitePath = sitePathFor(slug);
-  const siteUrl = siteUrlFor(slug);
-  const dbName = DB.nameFor(slug);
+  const target = options.target;
+  const sitePath = target?.sitePath ?? sitePathFor(slug);
+  const siteUrl = target?.siteUrl ?? siteUrlFor(slug);
+  const dbName = target?.dbName ?? DB.nameFor(slug);
+  const dbUser = target?.dbUser ?? DB.user;
+  const dbPassword = target?.dbPassword ?? DB.password;
+  const rewriteBase = target?.rewriteBase ?? slug;
 
   logger.step(`Provisioning WordPress at ${sitePath}`);
 
@@ -98,29 +120,36 @@ export async function provision(
       "config",
       "create",
       `--dbname=${dbName}`,
-      `--dbuser=${DB.user}`,
-      `--dbpass=${DB.password}`,
+      `--dbuser=${dbUser}`,
+      `--dbpass=${dbPassword}`,
       `--dbhost=${DB.host}:${DB.port}`,
       "--skip-check",
     ], { sitePath });
   }
 
-  // 3. Database. `wp db create` fails harmlessly when it already exists.
-  logger.step(`Ensuring database ${dbName} exists…`);
-  const dbCreate = await run(logger, ["db", "create"], {
-    sitePath,
-    allowFailure: true,
-  });
-  if (dbCreate.exitCode !== 0) {
-    const alreadyExists = /database exists|already exists/i.test(
-      dbCreate.stderr + dbCreate.stdout,
-    );
-    if (!alreadyExists) {
-      throw new Error(
-        `Could not create database ${dbName}: ${dbCreate.stderr || dbCreate.stdout}`,
+  // 3. Database. Either the user supplied one that must already be empty, or
+  //    we create it — `wp db create` fails harmlessly when it already exists.
+  if (options.requireEmptyDatabase) {
+    logger.step(`Checking database ${dbName} is present and empty…`);
+    await requireEmptyDatabase(dbName, { user: dbUser, password: dbPassword });
+    logger.success(`Database ${dbName} is empty and ready.`);
+  } else {
+    logger.step(`Ensuring database ${dbName} exists…`);
+    const dbCreate = await run(logger, ["db", "create"], {
+      sitePath,
+      allowFailure: true,
+    });
+    if (dbCreate.exitCode !== 0) {
+      const alreadyExists = /database exists|already exists/i.test(
+        dbCreate.stderr + dbCreate.stdout,
       );
+      if (!alreadyExists) {
+        throw new Error(
+          `Could not create database ${dbName}: ${dbCreate.stderr || dbCreate.stdout}`,
+        );
+      }
+      logger.log(`Database ${dbName} already exists — reusing it.`);
     }
-    logger.log(`Database ${dbName} already exists — reusing it.`);
   }
 
   // 4. Core install.
@@ -196,7 +225,7 @@ export async function provision(
   // 8. Pretty permalinks, so page slugs resolve as /about/ not /?p=12.
   logger.step("Setting permalinks…");
   await run(logger, ["rewrite", "structure", "/%postname%/"], { sitePath });
-  await writeHtaccess(sitePath, slug, logger);
+  await writeHtaccess(sitePath, rewriteBase, logger);
 
   logger.success(`WordPress ready at ${siteUrl}`);
 

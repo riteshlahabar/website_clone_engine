@@ -9,7 +9,7 @@ import path from "node:path";
 import { PATHS, PROJECT_ROOT } from "./env.ts";
 import type { JobLogger } from "./jobs.ts";
 import { wp } from "./wpcli.ts";
-import { composePage, validateDocument } from "../elementor/compose.ts";
+import { composePage, validateDocument, type ElementorNode } from "../elementor/compose.ts";
 import { applyBrandKit } from "../elementor/kit.ts";
 import { getBlock } from "../elementor/registry.ts";
 import { applyLogo, importImage } from "./media.ts";
@@ -54,8 +54,14 @@ async function findPageId(
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-async function upsertPage(
-  page: Page,
+/**
+ * Create or update a page by slug, returning its post id.
+ *
+ * Takes just the title and slug rather than a whole `Page` so the clone
+ * pipeline, which has no brief sections, can reuse it.
+ */
+export async function upsertPage(
+  page: { title: string; slug: string },
   sitePath: string,
   logger: JobLogger,
 ): Promise<number> {
@@ -88,6 +94,43 @@ async function upsertPage(
     throw new Error(`Could not read a post ID back for “${page.title}”.`);
   }
   return id;
+}
+
+/**
+ * Write an Elementor document onto a page.
+ *
+ * The payload goes to a file and is handed to PHP by path, never as a CLI
+ * argument — see php/set-elementor-data.php for why the write has to happen
+ * inside PHP at all (`wp post meta update` corrupts the JSON).
+ *
+ * Shared with the clone pipeline, which produces its elements a different way
+ * but must persist them identically.
+ */
+export async function writeElementorDocument(options: {
+  postId: number;
+  /** Basename for the payload file kept in out/, for debugging. */
+  payloadName: string;
+  /** Human-readable name for the log line. */
+  label: string;
+  elements: ElementorNode[];
+  sitePath: string;
+  logger: JobLogger;
+}): Promise<void> {
+  const payloadPath = path.join(PATHS.out, `${options.payloadName}.json`);
+  await writeFile(
+    payloadPath,
+    JSON.stringify({ elements: options.elements, page_settings: {} }, null, 2),
+    "utf8",
+  );
+
+  options.logger.step(
+    `Writing Elementor data for “${options.label}” (${options.elements.length} sections)…`,
+  );
+  await run(
+    options.logger,
+    ["eval-file", SET_DATA_SCRIPT, String(options.postId), payloadPath],
+    { sitePath: options.sitePath },
+  );
 }
 
 /**
@@ -149,16 +192,13 @@ export async function applyContent(
         );
       }
 
-      const payloadPath = path.join(PATHS.out, `${brief.site.slug}-${page.slug}.json`);
-      await writeFile(
-        payloadPath,
-        JSON.stringify({ elements, page_settings: {} }, null, 2),
-        "utf8",
-      );
-
-      logger.step(`Writing Elementor data for “${page.title}” (${elements.length} sections)…`);
-      await run(logger, ["eval-file", SET_DATA_SCRIPT, String(postId), payloadPath], {
+      await writeElementorDocument({
+        postId,
+        payloadName: `${brief.site.slug}-${page.slug}`,
+        label: page.title,
+        elements,
         sitePath,
+        logger,
       });
     }
 

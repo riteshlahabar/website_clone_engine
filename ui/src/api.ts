@@ -181,3 +181,93 @@ export async function fetchTemplate(id: string): Promise<SiteTemplate> {
   );
   return data.template;
 }
+
+// --- clone -------------------------------------------------------------
+
+import type { CloneDraft, CloneResult, DiscoveredPage } from "./types.ts";
+
+export type StartJobResponse =
+  | { ok: true; jobId: string }
+  | { ok: false; errors: string[] };
+
+/** POST a clone spec and read back either a job id or a list of problems. */
+async function postCloneSpec(
+  path: string,
+  payload: unknown,
+): Promise<StartJobResponse> {
+  const response = await fetch(path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const body = (await response.json().catch(() => null)) as
+    | { ok?: boolean; jobId?: string; errors?: string[]; message?: string }
+    | null;
+
+  if (response.ok && body?.ok && body.jobId) {
+    return { ok: true, jobId: body.jobId };
+  }
+  const errors = body?.errors ?? [
+    body?.message ?? `Request failed (${response.status})`,
+  ];
+  return { ok: false, errors };
+}
+
+export type CloneCheckResponse = {
+  ok: boolean;
+  errors: string[];
+  siteUrl: string | null;
+};
+
+/** Validate the folder and database without starting a run. */
+export async function checkCloneTarget(
+  payload: unknown,
+): Promise<CloneCheckResponse> {
+  const response = await fetch("/api/clone/check", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const body = (await response.json().catch(() => null)) as
+    | Partial<CloneCheckResponse>
+    | null;
+  return {
+    ok: Boolean(body?.ok),
+    errors: body?.errors ?? [`Request failed (${response.status})`],
+    siteUrl: body?.siteUrl ?? null,
+  };
+}
+
+export function startDiscover(payload: unknown): Promise<StartJobResponse> {
+  return postCloneSpec("/api/clone/discover", payload);
+}
+
+export function startClone(payload: unknown): Promise<StartJobResponse> {
+  return postCloneSpec("/api/clone", payload);
+}
+
+export type { CloneDraft, CloneResult, DiscoveredPage };
+
+export type FolderEntry = {
+  name: string;
+  path: string;
+  relative: string;
+  isEmpty: boolean;
+  hasWordPress: boolean;
+  childFolders: number;
+};
+
+export type FolderListing = {
+  base: string;
+  current: string;
+  relative: string;
+  parent: string | null;
+  entries: FolderEntry[];
+};
+
+/** List folders under htdocs, for the folder picker. */
+export function fetchFolders(relative = ""): Promise<FolderListing> {
+  return request<FolderListing>(
+    `/api/clone/folders?path=${encodeURIComponent(relative)}`,
+  );
+}

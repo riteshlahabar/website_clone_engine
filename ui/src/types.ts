@@ -203,3 +203,187 @@ export function toPayload(draft: BriefDraft) {
     menu: draft.menu,
   };
 }
+
+// --- clone -------------------------------------------------------------
+
+/** One page discovery found, as shown in the confirmation checklist. */
+export type DiscoveredPage = {
+  url: string;
+  slug: string;
+  title: string;
+  depth: number;
+  isFrontPage: boolean;
+};
+
+export type SectionDecision = {
+  role: "header" | "footer" | "section";
+  tag: string;
+  mode: "native" | "html";
+  reason?: string;
+  widgets: number;
+  unmapped: number;
+  score: number;
+};
+
+export type ClonedPage = {
+  title: string;
+  slug: string;
+  sourceUrl: string;
+  url: string;
+  editUrl: string;
+  postId: number;
+  isFrontPage: boolean;
+  decisions: SectionDecision[];
+  summary: string;
+  /** Absent when the visual check could not run for this page. */
+  visual?: VisualComparison;
+  visualSummary?: string;
+};
+
+/** Mirrors VisualComparison in server/clone/compare.ts. */
+export type VisualComparison = {
+  source: { width: number; height: number };
+  clone: { width: number; height: number };
+  heightRatio: number;
+  difference: number;
+};
+
+export type CloneResult = {
+  siteUrl: string;
+  adminUrl: string;
+  adminUser: string;
+  adminPassword: string;
+  sitePath: string;
+  dbName: string;
+  themeSlug: string;
+  pages: ClonedPage[];
+  stats: {
+    imagesImported: number;
+    assetsLocalized: number;
+    cssBytes: number;
+    menuItems: number;
+    hasHeader: boolean;
+    hasFooter: boolean;
+  };
+};
+
+/** The clone form's state. Mirrors cloneSpecSchema on the server. */
+export type CloneDraft = {
+  sourceUrl: string;
+  targetPath: string;
+  dbName: string;
+  dbUser: string;
+  dbPassword: string;
+  adminUser: string;
+  adminEmail: string;
+  adminPassword: string;
+  title: string;
+  maxPages: number;
+  respectRobots: boolean;
+  /** See fidelitySchema.mode in server/shared/clone.ts. */
+  cloneMode: "exact" | "auto" | "editable";
+  htmlFallbackThreshold: number;
+  viewportWidth: number;
+};
+
+export function emptyCloneDraft(): CloneDraft {
+  return {
+    sourceUrl: "",
+    // Deliberately empty. Pre-filling the htdocs root looked like a valid
+    // value but was rejected on submit, which read as a bug.
+    targetPath: "",
+    dbName: "",
+    dbUser: "root",
+    dbPassword: "",
+    adminUser: "admin",
+    adminEmail: "admin@example.com",
+    adminPassword: "",
+    title: "",
+    maxPages: 15,
+    respectRobots: true,
+    cloneMode: "exact",
+    htmlFallbackThreshold: 0.25,
+    viewportWidth: 1440,
+  };
+}
+
+/**
+ * Merge a stored draft against current defaults.
+ *
+ * The brief form learned this the hard way: a draft saved under an older
+ * schema came back missing a field and broke the submit button with nothing
+ * shown in the UI. Anything unreadable falls back to a default.
+ */
+export function normalizeCloneDraft(stored: unknown): CloneDraft {
+  const defaults = emptyCloneDraft();
+  if (!stored || typeof stored !== "object") return defaults;
+  const raw = stored as Record<string, unknown>;
+
+  const text = (key: keyof CloneDraft): string => {
+    const value = raw[key];
+    return typeof value === "string" ? value : (defaults[key] as string);
+  };
+  const number = (key: keyof CloneDraft): number => {
+    const value = raw[key];
+    return typeof value === "number" && Number.isFinite(value)
+      ? value
+      : (defaults[key] as number);
+  };
+  const flag = (key: keyof CloneDraft): boolean => {
+    const value = raw[key];
+    return typeof value === "boolean" ? value : (defaults[key] as boolean);
+  };
+
+  return {
+    sourceUrl: text("sourceUrl"),
+    targetPath: text("targetPath"),
+    dbName: text("dbName"),
+    dbUser: text("dbUser") || defaults.dbUser,
+    dbPassword: text("dbPassword"),
+    adminUser: text("adminUser") || defaults.adminUser,
+    adminEmail: text("adminEmail") || defaults.adminEmail,
+    adminPassword: text("adminPassword"),
+    title: text("title"),
+    maxPages: Math.min(100, Math.max(1, Math.round(number("maxPages")))),
+    cloneMode:
+      raw.cloneMode === "auto" || raw.cloneMode === "editable" || raw.cloneMode === "exact"
+        ? raw.cloneMode
+        : defaults.cloneMode,
+    respectRobots: flag("respectRobots"),
+    htmlFallbackThreshold: Math.min(1, Math.max(0, number("htmlFallbackThreshold"))),
+    viewportWidth: Math.min(2560, Math.max(320, Math.round(number("viewportWidth")))),
+  };
+}
+
+/** Shape the draft into the server's cloneSpecSchema. */
+export function toClonePayload(
+  draft: CloneDraft,
+  selectedPages: DiscoveredPage[] = [],
+): Record<string, unknown> {
+  return {
+    sourceUrl: draft.sourceUrl.trim(),
+    targetPath: draft.targetPath.trim(),
+    dbName: draft.dbName.trim(),
+    dbUser: draft.dbUser.trim() || "root",
+    dbPassword: draft.dbPassword,
+    site: {
+      title: draft.title.trim(),
+      adminUser: draft.adminUser.trim() || "admin",
+      adminEmail: draft.adminEmail.trim(),
+      // An empty password means "generate one", so it must be absent.
+      ...(draft.adminPassword ? { adminPassword: draft.adminPassword } : {}),
+    },
+    crawl: {
+      maxPages: draft.maxPages,
+      urls: [],
+      respectRobots: draft.respectRobots,
+    },
+    fidelity: {
+      mode: draft.cloneMode,
+      htmlFallbackThreshold: draft.htmlFallbackThreshold,
+      viewportWidth: draft.viewportWidth,
+      viewportHeight: 900,
+    },
+    selectedPages,
+  };
+}
